@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body style="padding-top: 60px;">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} fade show" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<script>
+  setTimeout(() => {
+    let alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+      alert.classList.remove('show');
+      alert.classList.add('fade');
+      setTimeout(() => alert.remove(), 500);
+    });
+  }, 3000);  // Desaparece después de 3 segundos
+</script>
+
+  <nav class="navbar">
+    <a href="{{ url_for('index') }}">
+      <img src="{{ url_for('static', filename='images/borisnacks.png') }}" alt="Logo" class="navbar-logo">
+    </a>
+
+
+    <ul class="navbar-items">
+      <li><a href="{{ url_for('carrito') }}" class="{% if request.endpoint == 'carrito' %}active{% endif %} active buttons">
+        <i data-feather="shopping-cart"></i>
+      </a></li>
+
+      <li><a href="{{ url_for('usuario') }}" class="{% if request.endpoint == 'usuario' %}active{% endif %} active buttons">
+        <i data-feather="user"></i>
+      </a></li>
+    </ul>
+  </nav>
+  {% block body %}
+    <button id="delete-account-btn" class="delete-button">Borrar Cuenta</button>
+
+    <div id="delete-popup" class="popup">
+        <p>¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
+        <input type="password" id="delete-password" placeholder="Ingresa tu contraseña">
+        <button id="confirm-delete">Sí, eliminar</button>
+        <button id="cancel-delete">Cancelar</button>
+    </div>
+
+    <form id="delete-form" method="POST" action="{{ url_for('delete_account') }}" style="display: none;">
+        <input type="hidden" name="contraseña" id="hidden-password">
+    </form>
+  {% endblock %}
+  <footer>
+    <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %} active buttons">
+      <!-- <ion-icon name="people"></ion-icon> -->
+      <p>About</p>
+    </a></li>
+  </footer>
+  <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script>
+    feather.replace();
+  </script>
+</body>
+</html>

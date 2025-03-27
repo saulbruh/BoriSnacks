@@ -1,0 +1,178 @@
+body {
+  font-family: sans-serif;
+  padding-top: 60px; /* Añadido para evitar que el contenido quede oculto detrás del navbar */
+}
+
+.section {
+  padding: 20px;
+}
+
+.banner-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-container {
+  width: 80%;
+  overflow: hidden;
+  display: flex;
+}
+
+.carousel-slide {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide img {
+  width: 100%;
+  flex: 0 0 100%;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.carousel-btn.left {
+  left: 10px;
+}
+
+.carousel-btn.right {
+  right: 10px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between; /* Alinea los elementos a los extremos */
+  align-items: center; /* Centra verticalmente */
+  padding: 0 20px; /* Añade un poco de espacio en los lados */
+  position: fixed; /* Añadido para fijar la navbar en la pantalla */
+  top: 0; /* Añadido para colocar la navbar en la parte superior */
+  left: 0; /* Añadido para alinear la navbar a la izquierda */
+  width: 100%; /* Añadido para que la navbar ocupe todo el ancho */
+  background-color: white; /* Ajusta el color según prefieras */
+  z-index: 1000; /* Añadido para asegurarse de que la navbar esté por encima de otros elementos */
+}
+
+.navbar-logo {
+  width: 60px; /* Ajusta este valor según sea necesario */
+  height: auto; /* Mantiene la proporción de la imagen */
+}
+
+.navbar-items {
+  display: flex;
+  list-style: none;
+  margin-left: auto; /* Empuja los elementos a la derecha */
+  padding-right: 30px;
+}
+
+.nombreLogout {
+  /* display: flex; */
+  justify-content: space-between;
+  /* margin-left: auto; */
+}
+
+.navbar-items i {
+  font-size: 30px; /* Ajusta este valor según sea necesario */
+  /* color: black; */
+}
+
+.buttons {
+  padding: 20px;
+}
+
+.active {
+  color: inherit; /* Mantiene el color original del enlace */
+}
+
+.tarjetas {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 20px;
+  padding: 20px;
+  white-space: nowrap;
+}
+
+.tarjetas-todos {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente fila */
+  justify-content: center; /* Centra los elementos horizontalmente */
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+}
+
+.tarjeta {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  width: auto; /* Ajusta según el tamaño deseado */
+  padding: 20px;
+}
+
+.tarjeta-producto {
+  display: flex;
+  flex-direction: column;
+  background-color: #dedddd77;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-buttons {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.buttons-carro {
+  margin-left: auto;
+}
+
+.product_img {
+  width: 200px; /* Ajusta el tamaño según prefieras */
+  height: auto;
+  border-radius: 12px;
+}
+
+.btn-buy {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 21px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-buy:hover {
+  background-color: #218838;
+}
+
+.btn-cart {
+  background-color: #ffc107;
+  color: black;
+  border: none;
+  padding: 10px 20px 7px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-cart:hover {
+  background-color: #e0a800;
+}
