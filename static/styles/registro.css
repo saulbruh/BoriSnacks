@@ -1,0 +1,76 @@
+body {
+  font-family: sans-serif;
+}
+
+.back-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  text-decoration: none;
+  background-color: #777;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #555555; /* Color de fondo al pasar el mouse */
+}
+
+.section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 85vh;
+    flex-direction: column;
+    text-align: center; /* Agregado para centrar todos los elementos dentro de .section */
+}
+
+h1 {
+    /* Se eliminó el estilo inline, no se necesita hacer cambios aquí */
+}
+
+.section form {
+    width: 100%;
+    max-width: 400px;
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Agregado para centrar los campos de entrada horizontalmente */
+  gap: 10px; /* Cambiado para asegurar un espaciado uniforme */
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+    padding: 15px;
+    font-size: 16px;
+    width: 90%; /* Modificado para evitar que los inputs sean más anchos que el formulario */
+    margin-bottom: 10px;
+    background-color: #e7e5e5; /* Fondo más oscuro */
+    color: black; /* Texto legible */
+    border-radius: 12px;
+    border: none;
+    text-align: center; /* Agregado para centrar el texto dentro de los campos */
+    box-sizing: border-box; /* Agregado para evitar que el padding afecte el ancho total */
+}
+
+input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="password"]::placeholder {
+    color: #a9a9a9;
+}
+
+button {
+    background-color: #4CAF50; /* Color de fondo atractivo */
+    color: white; /* Color de texto que contrasta */
+    border: none;
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transición al pasar el mouse */
+}
+
+button:hover {
+    background-color: #45a049; /* Color de fondo al pasar el mouse */
+}

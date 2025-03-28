@@ -42,7 +42,7 @@ def registro():
                            (nombre, apellido, correo_electronico, hashed_password))
             conn.commit()
         except mariadb.IntegrityError:
-            return "Error: El correo ya está registrado."
+            return "Error: Email already registered."
         finally:
             conn.close()
 
@@ -68,20 +68,20 @@ def login():
             if check_password_hash(hashed_password, contraseña):
                 session['user_id'] = usuario_id
                 session['user_name'] = usuario_nombre
-                flash("Inicio de sesión exitoso", "success")
+                flash("Successfuly logged in", "success")
                 next_page = session.pop('next', url_for('index'))  # Obtener la página almacenada o redirigir a index
                 return redirect(next_page)
             else:
-                flash("Error: Contraseña incorrecta", "danger")
+                flash("Error: Wrong password", "danger")
         else:
-            flash("Error: Usuario no encontrado", "danger")
+            flash("Error: User not found", "danger")
 
     return render_template('login.html')
 
 @app.route('/logout')
 def logout():
     session.clear() # Limpia toda la sesión
-    flash("Has cerrado sesión exitosamente", "info")  # Mensaje de confirmación
+    flash("Successfully logged out", "info")  # Mensaje de confirmación
     return redirect(url_for('index'))  # Redirigir a la página de inicio
 
 @app.route('/about')
@@ -94,7 +94,7 @@ def usuario():
         return render_template('user.html', usuario=session['user_name'])
     else:
         session['next'] = request.path  # Guardar la URL actual antes de redirigir
-        flash("Debes iniciar sesión para acceder a esta página.", "warning")
+        flash("Log in requiered in order to proceed.", "warning")
         return redirect(url_for('login'))
 
 @app.route('/carrito')
@@ -132,7 +132,7 @@ def carrito():
 @app.route('/delete_account', methods=['POST'])
 def delete_account():
     if 'user_id' not in session:
-        flash("Debes iniciar sesión para realizar esta acción.", "warning")
+        flash("You need to log in before performing this action.", "warning")
         return redirect(url_for('login'))
 
     contraseña = request.form['contraseña']
@@ -148,11 +148,11 @@ def delete_account():
         conn.commit()
         conn.close()
         session.clear()
-        flash("Cuenta eliminada exitosamente.", "success")
+        flash("Account deleted successfully.", "success")
         return redirect(url_for('index'))
     else:
         conn.close()
-        flash("Contraseña incorrecta. No se eliminó la cuenta.", "danger")
+        flash("Wrong password. Account not deleted", "danger")
         return redirect(url_for('usuario'))
 
 #Conexion a MariaDB sin ORM

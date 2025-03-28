@@ -4,59 +4,64 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/registro.css') }}">
-  <title>BoriSnacks - login</title>
+  <title>BoriSnacks - Log in</title>
 </head>
 <body>
-  <h1>Log in de Usuario </h1>
-  <form action="/login" method="POST">
-    <label for="correo">Correo Electrónico:</label>
-    <input type="email" id="correo" name="correo" required>
-    <br>
+  <a href="{{ url_for('index') }}" class="back-button">Cancel</a>
+  <div class="section">
+    <div class="section">
+      <h1>Log in with your account</h1>
+      <form action="/login" method="POST">
+        <label for="correo">Email</label>
+        <input type="email" id="correo" name="correo" placeholder="johndoe@email.com" required>
+        <br>
 
-    <label for="contraseña">Contraseña:</label>
-    <input type="password" id="contraseña" name="contraseña" required>
-    <br>
+        <label for="contraseña">Password</label>
+        <input type="password" id="contraseña" name="contraseña" placeholder="Password" required>
+        <br>
 
-    <button type="submit">Iniciar Sesión</button>
-  </form>
+        <button type="submit">Log in</button>
+      </form>
+    </div>
 
-  <p>¿No tienes cuenta? <a href="/registro">Regístrate aquí</a></p>
+    <p>Don't have an account? <a href="/registro">Create one here!</a></p>
 
-  {% if 'user_id' in session %}
-  <form action="/logout" method="GET">
-    <button type="submit">Cerrar Sesión</button>
-  </form>
-  <button id="delete-account-btn" class="delete-button">Borrar Cuenta</button>
+    {% if 'user_id' in session %}
+    <form action="/logout" method="GET">
+      <button type="submit">Log out</button>
+    </form>
+    <button id="delete-account-btn" class="delete-button">Delete Account</button>
 
-  <!-- Primer pop-up de confirmación -->
-  <div id="confirm-popup" class="popup" style="display: none;">
-      <p>¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
-      <button id="confirm-yes">Sí, eliminar</button>
-      <button id="confirm-cancel">Cancelar</button>
-  </div>
+    <!-- Primer pop-up de confirmación -->
+    <div id="confirm-popup" class="popup" style="display: none;">
+        <p>Are you sure you want to delete your account? You cannot undo this.</p>
+        <button id="confirm-yes">Yes, delete my account</button>
+        <button id="confirm-cancel">Cancel</button>
+    </div>
 
-  <!-- Segundo pop-up para ingresar la contraseña -->
-  <div id="password-popup" class="popup" style="display: none;">
-      <p>Por favor, ingresa tu contraseña para confirmar:</p>
-      <input type="password" id="delete-password" placeholder="Ingresa tu contraseña">
-      <button id="submit-delete">Eliminar cuenta</button>
-      <button id="password-cancel">Cancelar</button>
-  </div>
+    <!-- Segundo pop-up para ingresar la contraseña -->
+    <div id="password-popup" class="popup" style="display: none;">
+        <p>To confirm, enter your password:</p>
+        <input type="password" id="delete-password" placeholder="Ingresa tu contraseña">
+        <button id="submit-delete">Delete Account</button>
+        <button id="password-cancel">Cancel</button>
+    </div>
 
-  <form id="delete-form" method="POST" action="{{ url_for('delete_account') }}" style="display: none;">
-      <input type="hidden" name="contraseña" id="hidden-password">
-  </form>
-  {% endif %}
-
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div>
-        {% for category, message in messages %}
-          <p class="{{ category }}">{{ message }}</p>
-        {% endfor %}
-      </div>
+    <form id="delete-form" method="POST" action="{{ url_for('delete_account') }}" style="display: none;">
+        <input type="hidden" name="contraseña" id="hidden-password">
+    </form>
     {% endif %}
-  {% endwith %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div>
+          {% for category, message in messages %}
+            <p class="{{ category }}">{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
   <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 </body>
 </html>
