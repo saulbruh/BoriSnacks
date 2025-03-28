@@ -5,5 +5,13 @@
 {% endblock %}
 
 {% block body %}
-<h1>Hola, {{ session.user_name }}</h1>
+<div class="container">
+    <h1>Your Shopping Cart</h1>
+    
+    {% if carrito_vacio %}
+        <p>Shopping cart is empty.</p>
+    {% else %}
+        <p>Aquí se mostrarán los productos del carrito.</p>
+    {% endif %}
+</div>
 {% endblock %}

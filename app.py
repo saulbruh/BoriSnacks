@@ -99,12 +99,35 @@ def usuario():
 
 @app.route('/carrito')
 def carrito():
-    if 'user_name' in session:
-        return render_template('carrito.html', usuario=session['user_name'])
-    else:
-        session['next'] = request.path  # Guardar la URL actual antes de redirigir
+    if 'user_id' not in session:
+        session['next'] = request.path  
         flash("Debes iniciar sesión para acceder al carrito.", "warning")
         return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Verificar si el usuario ya tiene un carrito
+    cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (session['user_id'],))
+    carrito = cursor.fetchone()
+
+    if not carrito:
+        # Si no tiene carrito, crearlo
+        cursor.execute("INSERT INTO carro_de_compra (user_id) VALUES (?)", (session['user_id'],))
+        conn.commit()
+        cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (session['user_id'],))
+        carrito = cursor.fetchone()
+
+    carrito_id = carrito[0]
+
+    # Contar cuántos productos hay en el carrito
+    cursor.execute("SELECT COUNT(*) FROM carro_de_compra_items WHERE carro_de_compra_id = ?", (carrito_id,))
+    cantidad_productos = cursor.fetchone()[0]
+    carrito_vacio = cantidad_productos == 0  
+
+    conn.close()
+
+    return render_template('carrito.html', usuario=session['user_name'], carrito_vacio=carrito_vacio)
 
 @app.route('/delete_account', methods=['POST'])
 def delete_account():
@@ -141,6 +164,23 @@ def get_db_connection():
         port=35476,
         database="railway"
     )
+
+#Se crea el carro de compra y se le asigna a un usuario.
+def get_or_create_cart(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
+    carrito = cursor.fetchone()
+
+    if not carrito:
+        cursor.execute("INSERT INTO carro_de_compra (user_id) VALUES (?)", (user_id,))
+        conn.commit()
+        cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
+        carrito = cursor.fetchone()
+
+    conn.close()
+    return carrito[0]
 
 if __name__ == "__main__":
     app.run(debug=True)
