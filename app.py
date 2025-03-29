@@ -88,10 +88,10 @@ def logout():
 def about():
     return render_template('about.html')
 
-@app.route('/perfil')
+@app.route('/profile')
 def usuario():
     if 'user_name' in session:
-        return render_template('user.html', usuario=session['user_name'])
+        return render_template('home.html', usuario=session['user_name'])
     else:
         session['next'] = request.path  # Guardar la URL actual antes de redirigir
         flash("Log in requiered in order to proceed.", "warning")
@@ -128,6 +128,33 @@ def carrito():
     conn.close()
 
     return render_template('carrito.html', usuario=session['user_name'], carrito_vacio=carrito_vacio)
+
+# Ruta para la página de inicio
+@app.route('/profile/home')
+def home():
+    if 'user_id' not in session:
+        session['next'] = request.path  
+        return redirect(url_for('login'))
+    else:
+        return render_template('home.html')
+
+# Ruta para la página de órdenes
+@app.route('/profile/orders')
+def orders():
+    if 'user_id' not in session:
+        session['next'] = request.path  
+        return redirect(url_for('login'))
+    else:
+        return render_template('orders.html')
+
+# Ruta para la página de ajustes
+@app.route('/profile/settings')
+def settings():
+    if 'user_id' not in session:
+        session['next'] = request.path  
+        return redirect(url_for('login'))
+    else:
+        return render_template('settings.html')
 
 @app.route('/delete_account', methods=['POST'])
 def delete_account():

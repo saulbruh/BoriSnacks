@@ -1,6 +1,7 @@
 body {
   font-family: sans-serif;
   padding-top: 60px; /* Añadido para evitar que el contenido quede oculto detrás del navbar */
+  margin: 0px;
 }
 
 .section {
@@ -175,4 +176,44 @@ body {
 
 .btn-cart:hover {
   background-color: #e0a800;
+}
+
+/* User section */
+
+body {
+  margin: 0;
+  /* display: flex; */
+}
+
+.container {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: white;
+  color: black;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 15px 0;
+}
+
+.sidebar a {
+  color: black;
+  text-decoration: none;
+}
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+  background-color: #e7e7e7;
 }
