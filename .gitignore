@@ -1,4 +1,2 @@
 env/
 .env
-MAIL_USERNAME=tucorreo@gmail.com
-MAIL_PASSWORD=tucontraseñadeaplicación
