@@ -1,11 +1,26 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session, flash  # type: ignore
 from flask_sqlalchemy import SQLAlchemy  # type: ignore
+from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 import mariadb  # type: ignore
 import hashlib
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Cargar variables de entorno desde .env
 
 app = Flask(__name__)
 app.secret_key = "1234"
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+
+mail = Mail(app)
+serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 @app.route('/')
 def index():
@@ -181,6 +196,60 @@ def delete_account():
         conn.close()
         flash("Wrong password. Account not deleted", "danger")
         return redirect(url_for('usuario'))
+
+@app.route('/reset_password_request', methods=['POST'])
+def reset_password_request():
+    email = request.form.get('correo')
+    if not email:
+        flash("El correo electrónico es requerido", "danger")
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id FROM usuarios WHERE correo_electronico = ?", (email,))
+    user = cursor.fetchone()
+    conn.close()
+
+    if user:
+        token = serializer.dumps(email, salt="reset-password")
+        reset_link = url_for('reset_password', token=token, _external=True)
+
+        msg = Message("Recuperación de contraseña",
+                      sender=app.config['MAIL_USERNAME'],
+                      recipients=[email])
+        msg.body = f"Para restablecer tu contraseña, haz clic en el siguiente enlace: {reset_link}"
+        mail.send(msg)
+
+        flash("Se ha enviado un correo con instrucciones para resetear tu contraseña.", "success")
+        return redirect(url_for('login'))
+
+    flash("Correo electrónico no encontrado", "danger")
+    return redirect(url_for('login'))
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        email = serializer.loads(token, salt="reset-password", max_age=3600)  # Expira en 1 hora
+    except:
+        flash("Token inválido o expirado", "danger")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        nueva_contraseña = request.form['nueva_contraseña']
+        hashed_password = generate_password_hash(nueva_contraseña)
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE usuarios SET hashed_password = ? WHERE correo_electronico = ?", 
+                       (hashed_password, email))
+        conn.commit()
+        conn.close()
+
+        flash("Tu contraseña ha sido restablecida con éxito.", "success")
+        return redirect(url_for('login'))
+
+    return render_template('reset_password.html', token=token)
 
 #Conexion a MariaDB sin ORM
 def get_db_connection():

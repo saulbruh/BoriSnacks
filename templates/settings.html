@@ -28,6 +28,10 @@
           <input type="hidden" name="contraseña" id="hidden-password">
       </form>
 
+      <form id="reset-password-form" method="POST" action="{{ url_for('reset_password_request') }}">
+          <input type="email" name="correo" placeholder="Ingresa tu correo para resetear contraseña" required>
+          <button type="submit">Solicitar restablecimiento de contraseña</button>
+      </form>
 
     {% endif %}
 {% endblock %}

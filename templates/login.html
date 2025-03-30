@@ -13,7 +13,7 @@
       <h1>Log in with your account</h1>
       <form action="/login" method="POST">
         <label for="correo">Email</label>
-        <input type="email" id="correo" name="correo" placeholder="johndoe@email.com" required>
+        <input type="email" id="correo" name="correo" placeholder="johndoe@email.com" required autofocus>
         <br>
 
         <label for="contraseña">Password</label>
@@ -24,33 +24,13 @@
       </form>
     </div>
 
-    <p>Don't have an account? <a href="/registro">Create one here!</a></p>
+    <p>No tienes cuenta? <a href="/registro">¡Crea una aquí!</a></p>
+    <p>¿Olvidaste tu contraseña? <a href="#" onclick="document.getElementById('reset-password-form').style.display = 'block';">¡Restablecerla aquí!</a></p>
 
-    {% if 'user_id' in session %}
-    <form action="/logout" method="GET">
-      <button type="submit">Log out</button>
+    <form id="reset-password-form" method="POST" action="{{ url_for('reset_password_request') }}" style="display: none;">
+      <input type="email" name="correo" placeholder="Ingresa tu correo para resetear contraseña" required>
+      <button type="submit">Solicitar restablecimiento de contraseña</button>
     </form>
-    <button id="delete-account-btn" class="delete-button">Delete Account</button>
-
-    <!-- Primer pop-up de confirmación -->
-    <div id="confirm-popup" class="popup" style="display: none;">
-        <p>Are you sure you want to delete your account? You cannot undo this.</p>
-        <button id="confirm-yes">Yes, delete my account</button>
-        <button id="confirm-cancel">Cancel</button>
-    </div>
-
-    <!-- Segundo pop-up para ingresar la contraseña -->
-    <div id="password-popup" class="popup" style="display: none;">
-        <p>To confirm, enter your password:</p>
-        <input type="password" id="delete-password" placeholder="Ingresa tu contraseña">
-        <button id="submit-delete">Delete Account</button>
-        <button id="password-cancel">Cancel</button>
-    </div>
-
-    <form id="delete-form" method="POST" action="{{ url_for('delete_account') }}" style="display: none;">
-        <input type="hidden" name="contraseña" id="hidden-password">
-    </form>
-    {% endif %}
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
