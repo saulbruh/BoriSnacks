@@ -22,17 +22,7 @@
 
         <button type="submit">Log in</button>
       </form>
-    </div>
-
-    <p>Don't have an account? <a href="/registro">Create one!</a></p>
-    <p>Forgot your password? <a href="#" onclick="document.getElementById('reset-password-form').style.display = 'block';">Recover it here!</a></p>
-
-    <form id="reset-password-form" method="POST" action="{{ url_for('reset_password_request') }}" style="display: none;">
-      <input type="email" name="correo" placeholder="Enter you email:" required>
-      <button type="submit">Send password reset link</button>
-    </form>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div>
           {% for category, message in messages %}
@@ -41,6 +31,16 @@
         </div>
       {% endif %}
     {% endwith %}
+    </div>
+
+    <p>Forgot your password? <a href="#" onclick="document.getElementById('reset-password-form').style.display = 'block';">Recover it here!</a></p>
+    <form id="reset-password-form" method="POST" action="{{ url_for('reset_password_request') }}" style="display: none;">
+      <input type="email" name="correo" placeholder="Enter you email:" required>
+      <button type="submit">Send password reset link</button>
+    </form>
+
+    <p>Don't have an account? <a href="/registro">Create one!</a></p>
+    
   </div>
   <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 </body>

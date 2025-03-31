@@ -116,7 +116,7 @@ def usuario():
 def carrito():
     if 'user_id' not in session:
         session['next'] = request.path  
-        flash("Debes iniciar sesión para acceder al carrito.", "warning")
+        flash("You must log in to access the cart..", "warning")
         return redirect(url_for('login'))
 
     conn = get_db_connection()
@@ -201,7 +201,7 @@ def delete_account():
 def reset_password_request():
     email = request.form.get('correo')
     if not email:
-        flash("El correo electrónico es requerido", "danger")
+        flash("The email is required", "danger")
         return redirect(url_for('login'))
 
     conn = get_db_connection()
@@ -215,16 +215,16 @@ def reset_password_request():
         token = serializer.dumps(email, salt="reset-password")
         reset_link = url_for('reset_password', token=token, _external=True)
 
-        msg = Message("Recuperación de contraseña",
+        msg = Message("Password Recovery",
                       sender=app.config['MAIL_USERNAME'],
                       recipients=[email])
-        msg.body = f"Para restablecer tu contraseña, haz clic en el siguiente enlace: {reset_link}"
+        msg.body = f"To reset your password, click on the following link: {reset_link}"
         mail.send(msg)
 
-        flash("Se ha enviado un correo con instrucciones para resetear tu contraseña.", "success")
+        flash("An email has been sent with instructions on how to recover your password.", "success")
         return redirect(url_for('login'))
 
-    flash("Correo electrónico no encontrado", "danger")
+    flash("Email not found", "danger")
     return redirect(url_for('login'))
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
@@ -232,7 +232,7 @@ def reset_password(token):
     try:
         email = serializer.loads(token, salt="reset-password", max_age=3600)  # Expira en 1 hora
     except:
-        flash("Token inválido o expirado", "danger")
+        flash("Expired or invalid token", "danger")
         return redirect(url_for('login'))
 
     if request.method == 'POST':
