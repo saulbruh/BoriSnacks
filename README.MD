@@ -1,5 +1,3 @@
-
-
 # BoriSnacks
 
 BoriSnacks es una plataforma de comercio local que permite a los usuarios explorar productos y realizar compras en línea.
@@ -54,9 +52,12 @@ Para modificar o extender la funcionalidad del carrito, revisa el archivo `app.p
 |-------------|------------|
 | **Flask**  | Framework de desarrollo web para Python. |
 | **MariaDB**  | Base de datos SQL utilizada para almacenar usuarios, productos y pedidos. |
-| **SQLAlchemy**  | Manejo de la base de datos (aunque en el código principal se usa conexión directa). |
+| **SQLAlchemy**  | ORM para interactuar con la base de datos de forma más estructurada. |
 | **Werkzeug**  | Seguridad y autenticación de contraseñas con hashing. |
 | **Jinja2**  | Motor de plantillas para la generación dinámica de HTML. |
+| **Flask-Mail**  | Biblioteca para el envío de correos electrónicos. |
+| **itsdangerous**  | Generación y validación de tokens para recuperación de contraseñas. |
+| **dotenv**  | Manejo de variables de entorno. |
 
 ## Endpoints Principales
 
@@ -76,7 +77,7 @@ Para modificar o extender la funcionalidad del carrito, revisa el archivo `app.p
 
 ### 📍 Cierre de Sesión
 **Ruta:** `/logout`  
-**Descripción:** Cierra sesión y limpia la sesión activa del usuario.
+**Descripción:** Cierra la sesión del usuario y lo redirige a la página de inicio.  
 
 ### 📍 Perfil del Usuario
 **Ruta:** `/perfil`  
@@ -89,7 +90,16 @@ Para modificar o extender la funcionalidad del carrito, revisa el archivo `app.p
 ### 📍 Eliminar Cuenta
 **Ruta:** `/delete_account`  
 **Método:** `POST`  
-**Descripción:** Elimina la cuenta del usuario autenticado tras confirmar su contraseña.
+**Descripción:** Permite a los usuarios eliminar su cuenta de la plataforma previa confirmación de contraseña.  
+
+### 📍 Recuperación de Contraseña
+**Ruta:** `/reset_password_request`  
+**Método:** `POST`  
+**Descripción:** Permite a los usuarios solicitar un enlace para restablecer su contraseña.  
+
+**Ruta:** `/reset_password/<token>`  
+**Método:** `GET, POST`  
+**Descripción:** Permite a los usuarios restablecer su contraseña utilizando un token enviado por correo electrónico.  
 
 ## Seguridad Implementada
 
