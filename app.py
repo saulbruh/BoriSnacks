@@ -246,7 +246,7 @@ def reset_password(token):
         conn.commit()
         conn.close()
 
-        flash("Tu contraseña ha sido restablecida con éxito.", "success")
+        flash("Your password has been reset successfuly.", "success")
         return redirect(url_for('login'))
 
     return render_template('reset_password.html', token=token)

@@ -24,12 +24,12 @@
       </form>
     </div>
 
-    <p>No tienes cuenta? <a href="/registro">¡Crea una aquí!</a></p>
-    <p>¿Olvidaste tu contraseña? <a href="#" onclick="document.getElementById('reset-password-form').style.display = 'block';">¡Restablecerla aquí!</a></p>
+    <p>Don't have an account? <a href="/registro">Create one!</a></p>
+    <p>Forgot your password? <a href="#" onclick="document.getElementById('reset-password-form').style.display = 'block';">Recover it here!</a></p>
 
     <form id="reset-password-form" method="POST" action="{{ url_for('reset_password_request') }}" style="display: none;">
-      <input type="email" name="correo" placeholder="Ingresa tu correo para resetear contraseña" required>
-      <button type="submit">Solicitar restablecimiento de contraseña</button>
+      <input type="email" name="correo" placeholder="Enter you email:" required>
+      <button type="submit">Send password reset link</button>
     </form>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
