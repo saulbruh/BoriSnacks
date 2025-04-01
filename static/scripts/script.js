@@ -50,3 +50,17 @@ document.addEventListener("DOMContentLoaded", function() {
         deleteForm.submit();
     });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    const cartButtons = document.querySelectorAll(".btn-cart");
+    const cartPopup = document.getElementById("cart-popup");
+
+    cartButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            cartPopup.style.display = "block";
+            setTimeout(() => {
+                cartPopup.style.display = "none";
+            }, 2000); // Desaparece después de 2 segundos
+        });
+    });
+});
