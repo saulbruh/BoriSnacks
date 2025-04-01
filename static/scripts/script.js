@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (logoutLink) {
         logoutLink.addEventListener("click", function(event) {
-            const confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
+            const confirmLogout = confirm("Are you sure you want to log out?");
             if (!confirmLogout) {
                 event.preventDefault(); // Evita que el usuario cierre sesión si cancela
             }
