@@ -5,15 +5,22 @@
 {% endblock %}
 
 {% block body %}
-<div class="about-section">
-  <h2 class="about-title">Who are we?</h2>
-  <p class="about-text"><strong>BoriSnacks</strong> is a company committed to bringing the best snacks to our customers, offering an authentic and flavorful experience. Our mission is to provide delicious, accessible, and high-quality products that cater to all tastes. Through our selection of snacks, we aim to highlight and share the flavors that define Puerto Rican culinary culture, making them easy to enjoy every day.</p>
+<div class="about">
+  <div class="about-img-container">
+    <div>
+      <img src="{{ url_for('static', filename='images/aboutbanner.png') }}" alt="Group of people" class="about-img">
+    </div>
+  </div>
+  <div class="about-section">
+    <h2 class="about-title">Who are we?</h2>
+    <p class="about-text"><strong>BoriSnacks</strong> is a company committed to bringing the best snacks to our customers, offering an authentic and flavorful experience. Our mission is to provide delicious, accessible, and high-quality products that cater to all tastes. Through our selection of snacks, we aim to highlight and share the flavors that define Puerto Rican culinary culture, making them easy to enjoy every day.</p>
 
-  <p class="about-text">Founded in 2025, BoriSnacks was created with the purpose of revolutionizing the way people enjoy and purchase their favorite snacks. We focus on providing a convenient and modern alternative, ensuring that each product reflects the tradition and warmth of our island. Additionally, we support small and medium-sized local businesses, serving as a bridge between them and consumers, fostering the growth of Puerto Rican commerce.</p>
-</div>
+    <p class="about-text">Founded in 2025, BoriSnacks was created with the purpose of revolutionizing the way people enjoy and purchase their favorite snacks. We focus on providing a convenient and modern alternative, ensuring that each product reflects the tradition and warmth of our island. Additionally, we support small and medium-sized local businesses, serving as a bridge between them and consumers, fostering the growth of Puerto Rican commerce.</p>
+  </div>
 
-<div class="about-section">
-  <h2 class="about-title">Our vision</h2>
-  <p class="about-text">To become a nationally recognized brand for making Puerto Rico’s most iconic snacks easily accessible. We aspire to be the go-to reference when it comes to finding and enjoying those flavors that evoke memories, celebrations, and special moments. With an unwavering commitment to quality and authenticity, we work every day to bring the essence of Puerto Rico to every home.</p>
+  <div class="about-section">
+    <h2 class="about-title">Our vision</h2>
+    <p class="about-text">To become a nationally recognized brand for making Puerto Rico’s most iconic snacks easily accessible. We aspire to be the go-to reference when it comes to finding and enjoying those flavors that evoke memories, celebrations, and special moments. With an unwavering commitment to quality and authenticity, we work every day to bring the essence of Puerto Rico to every home.</p>
+  </div>
 </div>
 {% endblock %}

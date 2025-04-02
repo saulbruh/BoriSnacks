@@ -22,6 +22,11 @@ app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 mail = Mail(app)
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
+def check_logged_in():
+    if 'user_id' in session:
+        return redirect(url_for('usuario'))
+    return None
+
 @app.route('/')
 def index():
     conn = get_db_connection()
@@ -40,6 +45,10 @@ def index():
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
+    redirect_if_logged_in = check_logged_in()
+    if redirect_if_logged_in:
+        return redirect_if_logged_in
+
     if request.method == 'POST':
         nombre = request.form['nombre']
         apellido = request.form['apellido']
@@ -67,6 +76,10 @@ def registro():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    redirect_if_logged_in = check_logged_in()
+    if redirect_if_logged_in:
+        return redirect_if_logged_in
+
     if request.method == 'POST':
         correo = request.form['correo']
         contraseña = request.form['contraseña']

@@ -222,6 +222,10 @@ body {
 }
 
 /* About Us */
+.about {
+  padding-bottom: 25px;
+}
+
 .about-section {
   background-color: #f9f9f9;
   padding: 25px;
@@ -250,6 +254,20 @@ body {
   color: black;
 }
 
+.about-img-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  /* margin: 20px auto; */
+}
+
+.about-img {
+  width: 950px; /* 100% del ancho de la ventana */
+  height: auto; /* 100% de la altura de la ventana */
+}
+
+/* Cart pop-up section */
 .cart-popup {
   display: none;
   position: fixed;
@@ -265,7 +283,6 @@ body {
   font-size: 16px;
 }
 
-
 /* Footer */
 .footer {
   display: flex;
@@ -273,18 +290,20 @@ body {
   justify-content: space-between;
   padding: 25px 125px;
   background-color: #e9e9e9;
+  color:#6f6f6f;
 }
 
 .footer-blocks {
   display: flex;
   flex-direction: column;
+  margin: auto;
 }
 
 .footer-links {
   display: flex;
   flex-direction: column;
   list-style: none;
-  margin-left: auto;
+  /* margin-left: auto; */
   padding: 0px;
   gap: 10px;
 }
@@ -293,4 +312,16 @@ body {
 .footer-links a {
   color: inherit; /* Hereda el color del texto padre */
   text-decoration: none; /* Elimina el subrayado */
+}
+
+
+.phone-email {
+  display: flex;
+  flex-direction: column;
+  /* column-gap: 0.5px; */
+}
+
+.phone-email a {
+  color: inherit;
+  text-decoration: none;
 }
