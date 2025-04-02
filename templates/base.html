@@ -47,9 +47,39 @@
   </nav>
   {% block body %}
   {% endblock %}
+
   <footer>
-    <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %} active buttons">About</a></li>
+    <div class="footer">
+      <div class="footer-blocks">
+        <a href=""><img src="{{ url_for('static', filename='images/borisnacks.png') }}" alt="" class="navbar-logo"></a>
+        <p class="copyright">
+          Copyright &copy; <span class="year">2025</span> by BoriSnacks, Inc. <br>
+          All rights reserved.
+        </p>
+      </div>
+
+      <div class="footer-blocks">
+        <p>Contact Us</p>
+        <address>
+          <p>(Dirección)</p>
+          <p>
+            <a href="tel:415-201-6370">415-201-6370</a><br/>
+            <a href="mailto:hello@omnifood.com">borisnacks2025@gmail.com</a>
+          </p>
+        </address>
+      </div>
+
+      <div class="footer-blocks">
+        <p>Account & Info</p>
+          <ul class="footer-links">
+            <li><a href="/registro">Create account</a></li>
+            <li><a href="/login">Sign in</a></li>
+            <li><a href="/about">About</a></li>
+          </ul>
+      </div>
+    </div>
   </footer>
+
   <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

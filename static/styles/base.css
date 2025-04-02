@@ -264,3 +264,33 @@ body {
   z-index: 1000;
   font-size: 16px;
 }
+
+
+/* Footer */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25px 125px;
+  background-color: #e9e9e9;
+}
+
+.footer-blocks {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin-left: auto;
+  padding: 0px;
+  gap: 10px;
+}
+
+
+.footer-links a {
+  color: inherit; /* Hereda el color del texto padre */
+  text-decoration: none; /* Elimina el subrayado */
+}
