@@ -32,4 +32,26 @@
         {% endif %}
     </div>
 </div>
+<script>
+document.querySelectorAll(".btn-delete").forEach(button => {
+    button.addEventListener("click", function(event) {
+        event.preventDefault();
+        let productoId = this.getAttribute("data-product-id");
+
+        fetch("/eliminar_del_carrito", {
+            method: "POST",
+            body: new URLSearchParams({ producto_id: productoId }),
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert("Hubo un problema al eliminar el producto.");
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

@@ -59,7 +59,7 @@ html, body {
   display: flex;
   justify-content: space-between; /* Alinea los elementos a los extremos */
   align-items: center; /* Centra verticalmente */
-  padding: 0 20px; /* Añade un poco de espacio en los lados */
+  padding: 20px 20px; /* Añade un poco de espacio en los lados */
   position: fixed; /* Añadido para fijar la navbar en la pantalla */
   top: 0; /* Añadido para colocar la navbar en la parte superior */
   left: 0; /* Añadido para alinear la navbar a la izquierda */
