@@ -244,6 +244,14 @@ def orders():
     else:
         return render_template('orders.html')
 
+@app.route('/profile/address')
+def address():
+    if 'user_id' not in session:
+        session['next'] = request.path  
+        return redirect(url_for('login'))
+    else:
+        return render_template('address.html')
+
 # Ruta para la página de ajustes
 @app.route('/profile/settings')
 def settings():
