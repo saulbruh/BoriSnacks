@@ -238,8 +238,11 @@ body {
 }
 
 .container {
-  display: flex;
   width: 100%;
+}
+
+.user-container {
+  display: flex;
 }
 
 .sidebar {
@@ -266,8 +269,14 @@ body {
 
 .main-content {
   flex: 1;
-  padding: 90px 30px; /* Ajusta el padding superior según la altura del navbar */
+  padding: 90px 0px; /* Ajusta el padding superior según la altura del navbar */
   background-color: #ffffff;
+}
+
+.main-content-user {
+  background-color: #e9e9e9;
+  flex: 1;
+  padding: 30px;
 }
 
 /* About Us */
@@ -330,6 +339,10 @@ body {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   font-size: 16px;
+}
+
+.cart-container {
+  display: flex;
 }
 
 /* Footer */

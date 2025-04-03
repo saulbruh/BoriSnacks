@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="container user-container">
     <aside class="sidebar">
         <h2>Menu</h2>
         <ul>
@@ -14,7 +14,7 @@
             <li><a href="{{ url_for('settings') }}">Settings</a></li>
         </ul>
     </aside>
-    <main class="main-content">
+    <main class="main-content-user">
         {% block content %}{% endblock %}
     </main>
 </div>

@@ -7,27 +7,29 @@
 {% block body %}
 <div class="container">
     <h1>Your Shopping Cart</h1>
-    
-    {% if carrito_vacio %}
-        <p id="cart-empty-message" style="display: none;">Shopping cart is empty.</p>
-    {% else %}
-        <div class="cart-items">
-            {% for producto in productos %}
-                <div class="cart-item">
-                    <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="cart-img" style="max-width: 100px;">
-                    <div class="cart-details">
-                        <p>{{ producto.nombre }}</p>
-                        <p>Price: ${{ producto.precio }}</p>
-                        <p>Quantity: {{ producto.cantidad }}</p>
 
-                        <form action="{{ url_for('eliminar_del_carrito') }}" method="POST">
-                            <input type="hidden" name="producto_id" value="{{ producto.id }}">
-                            <button type="button" class="btn btn-danger btn-delete" data-product-id="{{ producto.id }}">Remove</button>
-                        </form>
+    <div class="cart-container">
+        {% if carrito_vacio %}
+            <p id="cart-empty-message" style="display: none;">Shopping cart is empty.</p>
+        {% else %}
+            <div class="cart-items">
+                {% for producto in productos %}
+                    <div class="cart-item">
+                        <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="cart-img" style="max-width: 100px;">
+                        <div class="cart-details">
+                            <p>{{ producto.nombre }}</p>
+                            <p>Price: ${{ producto.precio }}</p>
+                            <p>Quantity: {{ producto.cantidad }}</p>
+
+                            <form action="{{ url_for('eliminar_del_carrito') }}" method="POST">
+                                <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                                <button type="button" class="btn btn-danger btn-delete" data-product-id="{{ producto.id }}">Remove</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
