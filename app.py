@@ -194,6 +194,38 @@ def agregar_al_carrito():
 
     return redirect(url_for('carrito'))  # Redirige a la página del carrito después de agregar el producto
 
+@app.route('/eliminar_del_carrito', methods=['POST'])
+def eliminar_del_carrito():
+    if 'user_id' not in session:
+        return jsonify({"error": "Debes iniciar sesión para modificar el carrito"}), 401
+
+    producto_id = request.form.get('producto_id')
+
+    if not producto_id:
+        return jsonify({"error": "Producto no válido"}), 400
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Obtener el ID del carrito del usuario
+    cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
+    carrito = cursor.fetchone()
+
+    if not carrito:
+        conn.close()
+        return jsonify({"error": "Carrito no encontrado"}), 404
+
+    carrito_id = carrito[0]
+
+    # Eliminar el producto del carrito
+    cursor.execute("DELETE FROM carro_de_compra_items WHERE carro_de_compra_id = ? AND product_item_id = ?", (carrito_id, producto_id))
+    conn.commit()
+    conn.close()
+
+    flash("Producto eliminado del carrito", "success")
+    return redirect(url_for('carrito'))
+
 # Ruta para la página de inicio
 @app.route('/profile/home')
 def home():
