@@ -214,8 +214,7 @@ def eliminar_del_carrito():
     conn.commit()
     conn.close()
 
-    flash("Producto eliminado del carrito", "success")
-    return redirect(url_for('carrito'))
+    return jsonify({"success": True})
 
 @app.route('/profile')
 def usuario():
