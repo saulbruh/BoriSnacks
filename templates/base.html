@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
   {% block head %}{% endblock %}
 </head>
-<body style="padding-top: 60px;">
+<body>
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
     {% for category, message in messages %}
@@ -59,9 +59,12 @@
       </a></li>
     </ul>
   </nav>
-  {% block body %}
-  {% endblock %}
 
+  <div class="main-content">
+    {% block body %}
+    {% endblock %}
+  </div>
+    
   <footer>
     <div class="footer">
       <div class="footer-blocks">
@@ -76,13 +79,9 @@
         <p>Contact Us</p>
           <ul class="footer-links">
             <li>123 Avenida Bori, San Juan, PR 00926</li>
-            <li><a href="tel:415-201-6370">415-201-6370</a></li>
+            <li><a href="#">415-201-6370</a></li>
             <li><a href="mailto:borisnacks2025@gmail.com">borisnacks2025@gmail.com</a></li>
           </ul>
-          <!-- <p class="phone-email">
-            <a href="tel:415-201-6370">415-201-6370</a><br/>
-            <a href="mailto:borisnacks2025@gmail.com">borisnacks2025@gmail.com</a>
-          </p> -->
       </div>
 
       <div class="footer-blocks">
