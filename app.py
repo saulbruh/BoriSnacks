@@ -116,15 +116,6 @@ def logout():
 def about():
     return render_template('about.html')
 
-@app.route('/profile')
-def usuario():
-    if 'user_name' in session:
-        return render_template('home.html', usuario=session['user_name'])
-    else:
-        session['next'] = request.path  # Guardar la URL actual antes de redirigir
-        flash("Log in requiered in order to proceed.", "warning")
-        return redirect(url_for('login'))
-
 @app.route('/carrito')
 def carrito():
     if 'user_id' not in session:
@@ -225,6 +216,15 @@ def eliminar_del_carrito():
 
     flash("Producto eliminado del carrito", "success")
     return redirect(url_for('carrito'))
+
+@app.route('/profile')
+def usuario():
+    if 'user_name' in session:
+        return render_template('home.html', usuario=session['user_name'])
+    else:
+        session['next'] = request.path  # Guardar la URL actual antes de redirigir
+        flash("Log in requiered in order to proceed.", "warning")
+        return redirect(url_for('login'))
 
 # Ruta para la página de inicio
 @app.route('/profile/home')
