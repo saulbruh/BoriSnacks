@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import mariadb  # type: ignore
 import hashlib
 from dotenv import load_dotenv
+from country_list import countries_for_language
 import os
 
 load_dotenv()  # Cargar variables de entorno desde .env
@@ -243,13 +244,20 @@ def orders():
     else:
         return render_template('orders.html')
 
-@app.route('/profile/address')
+@app.route('/profile/address', methods=['GET', 'POST'])
 def address():
     if 'user_id' not in session:
         session['next'] = request.path  
         return redirect(url_for('login'))
-    else:
-        return render_template('address.html')
+    
+    # Obtener lista de países en español
+    countries = list(countries_for_language('es'))  
+
+    if request.method == 'POST':
+        selected_country = request.form.get('country')
+        flash(f"País seleccionado: {selected_country}", "success")  # Solo muestra un mensaje, no lo guarda aún.
+
+    return render_template('address.html', countries=countries)
 
 # Ruta para la página de ajustes
 @app.route('/profile/settings')
