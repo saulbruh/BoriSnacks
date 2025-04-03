@@ -129,33 +129,70 @@ def usuario():
 def carrito():
     if 'user_id' not in session:
         session['next'] = request.path  
-        flash("You must log in to access the cart..", "warning")
+        flash("You must log in to access the cart.", "warning")
         return redirect(url_for('login'))
 
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Verificar si el usuario ya tiene un carrito
+    # Obtener el ID del carrito del usuario
     cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (session['user_id'],))
     carrito = cursor.fetchone()
 
     if not carrito:
-        # Si no tiene carrito, crearlo
-        cursor.execute("INSERT INTO carro_de_compra (user_id) VALUES (?)", (session['user_id'],))
-        conn.commit()
-        cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (session['user_id'],))
-        carrito = cursor.fetchone()
+        conn.close()
+        return render_template('carrito.html', usuario=session['user_name'], carrito_vacio=True, productos=[])
 
     carrito_id = carrito[0]
 
-    # Contar cuántos productos hay en el carrito
-    cursor.execute("SELECT COUNT(*) FROM carro_de_compra_items WHERE carro_de_compra_id = ?", (carrito_id,))
-    cantidad_productos = cursor.fetchone()[0]
-    carrito_vacio = cantidad_productos == 0  
+    # Obtener productos en el carrito
+    cursor.execute("""
+        SELECT p.id, p.nombre, p.precio, p.imagen, ci.cantidad 
+        FROM carro_de_compra_items ci
+        JOIN productos p ON ci.product_item_id = p.id
+        WHERE ci.carro_de_compra_id = ?
+    """, (carrito_id,))
+    productos_carrito = cursor.fetchall()
+
+    productos = [
+        {"id": p[0], "nombre": p[1], "precio": p[2], "imagen": p[3], "cantidad": p[4]}
+        for p in productos_carrito
+    ]
+
+    carrito_vacio = len(productos) == 0
 
     conn.close()
 
-    return render_template('carrito.html', usuario=session['user_name'], carrito_vacio=carrito_vacio)
+    return render_template('carrito.html', usuario=session['user_name'], carrito_vacio=carrito_vacio, productos=productos)
+
+@app.route('/agregar_al_carrito', methods=['POST'])
+def agregar_al_carrito():
+    if 'user_id' not in session:
+        return jsonify({"error": "Debes iniciar sesión para agregar productos al carrito"}), 401
+
+    producto_id = request.form.get('producto_id')
+
+    if not producto_id:
+        return jsonify({"error": "Producto no válido"}), 400
+
+    user_id = session['user_id']
+    carrito_id = get_or_create_cart(user_id)
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id FROM carro_de_compra_items WHERE carro_de_compra_id = ? AND product_item_id = ?", (carrito_id, producto_id))
+    item = cursor.fetchone()
+
+    if item:
+        cursor.execute("UPDATE carro_de_compra_items SET cantidad = cantidad + 1 WHERE id = ?", (item[0],))
+    else:
+        cursor.execute("INSERT INTO carro_de_compra_items (carro_de_compra_id, product_item_id, cantidad) VALUES (?, ?, 1)", (carrito_id, producto_id))
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('carrito'))  # Redirige a la página del carrito después de agregar el producto
 
 # Ruta para la página de inicio
 @app.route('/profile/home')
