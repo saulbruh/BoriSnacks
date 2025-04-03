@@ -108,3 +108,22 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+// Enseñar la lista de todos los productos en el index
+// document.addEventListener("DOMContentLoaded", function() {
+//     const allProductsHeader = document.querySelector("h2 i[data-feather='chevron-down']");
+//     const allProductsSection = document.querySelector(".tarjetas-todos");
+
+//     if (allProductsHeader && allProductsSection) {
+//         allProductsSection.style.display = "none"; // Ocultar por defecto
+
+//         allProductsHeader.addEventListener("click", function() {
+//             allProductsSection.style.display = 
+//                 allProductsSection.style.display === "none" ? "block" : "none";
+//         });
+//     } else {
+//         console.error("No se encontró el header o la sección de productos.");
+//         console.log("allProductsHeader:", allProductsHeader); // Verifica si el icono está seleccionado
+//         console.log("allProductsSection:", allProductsSection); // Verifica si la sección está seleccionada
+//     }
+// });

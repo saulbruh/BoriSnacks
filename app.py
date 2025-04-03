@@ -360,5 +360,65 @@ def get_or_create_cart(user_id):
     conn.close()
     return carrito[0]
 
+@app.route('/snacks')
+def snacks():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, nombre, descripcion, precio, categoria, imagen, stock FROM productos")
+    productos = cursor.fetchall()
+    conn.close()
+
+    productos_json = [
+        {"id": p[0], "nombre": p[1], "descripcion": p[2], "precio": p[3], "categoria": p[4], "imagen": p[5], "stock": p[6]}
+        for p in productos
+    ]
+
+    return render_template('snacks.html', productos=productos_json)
+
+@app.route('/drinks')
+def drinks():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, nombre, descripcion, precio, categoria, imagen, stock FROM productos")
+    productos = cursor.fetchall()
+    conn.close()
+
+    productos_json = [
+        {"id": p[0], "nombre": p[1], "descripcion": p[2], "precio": p[3], "categoria": p[4], "imagen": p[5], "stock": p[6]}
+        for p in productos
+    ]
+
+    return render_template('drinks.html', productos=productos_json)
+
+@app.route('/candy')
+def candy():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, nombre, descripcion, precio, categoria, imagen, stock FROM productos")
+    productos = cursor.fetchall()
+    conn.close()
+
+    productos_json = [
+        {"id": p[0], "nombre": p[1], "descripcion": p[2], "precio": p[3], "categoria": p[4], "imagen": p[5], "stock": p[6]}
+        for p in productos
+    ]
+
+    return render_template('candy.html', productos=productos_json)
+
+@app.route('/all_products')
+def all_products():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, nombre, descripcion, precio, categoria, imagen, stock FROM productos")
+    productos = cursor.fetchall()
+    conn.close()
+
+    productos_json = [
+        {"id": p[0], "nombre": p[1], "descripcion": p[2], "precio": p[3], "categoria": p[4], "imagen": p[5], "stock": p[6]}
+        for p in productos
+    ]
+
+    return render_template('all_products.html', productos=productos_json)
+
 if __name__ == "__main__":
     app.run(debug=True)
