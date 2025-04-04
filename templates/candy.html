@@ -12,7 +12,9 @@
             <div class="tarjeta">
                 <div class="tarjeta-producto">
                     {% if producto.imagen %}
-                    <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
+                    <a href="{{ url_for('producto', id=producto.id) }}">
+                        <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
+                    </a>
                 {% else %}
                     <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Imagen no disponible" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
                 {% endif %}
