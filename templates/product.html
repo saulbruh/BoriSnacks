@@ -5,5 +5,11 @@
 {% endblock %}
 
 {% block body %}
-
+<div class="producto-detalle">
+    <h2>{{ producto.nombre }}</h2>
+    <p>{{ producto.stock }}</p>
+    <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}">
+    <p>${{ producto.precio }}</p>
+    <p>{{ producto.descripcion }}</p>
+</div>
 {% endblock %}

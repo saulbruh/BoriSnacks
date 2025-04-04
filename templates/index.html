@@ -25,25 +25,27 @@
             <div class="tarjeta">
                 <div class="tarjeta-producto">
                     {% if producto.imagen %}
-                    <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
-                {% else %}
+                    <a href="{{ url_for('producto', id=producto.id) }}">
+                        <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
+                    </a>
+                    {% else %}
                     <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Imagen no disponible" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
-                {% endif %}
-                <div>
-                    <p>{{ producto.nombre }}</p>
-                    <p>${{ producto.precio }}</p>        
-                    <div class="product-buttons">
-                        <div>
-                            <button class="btn-buy">Buy</button>
-                        </div>
-                        <div class="buttons-carro">
-                            <form action="{{ url_for('agregar_al_carrito') }}" method="POST">
-                                <input type="hidden" name="producto_id" value="{{ producto.id }}">
-                                <button type="submit" class="btn-cart"><i data-feather="shopping-cart"></i></button>
-                            </form>
+                    {% endif %}
+                    <div>
+                        <p>{{ producto.nombre }}</p>
+                        <p>${{ producto.precio }}</p>        
+                        <div class="product-buttons">
+                            <div>
+                                <a href="{{ url_for('producto', id=producto.id) }}"><button class="btn-buy">Buy</button></a>
+                            </div>
+                            <div class="buttons-carro">
+                                <form action="{{ url_for('agregar_al_carrito') }}" method="POST">
+                                    <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                                    <button type="submit" class="btn-cart"><i data-feather="shopping-cart"></i></button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
         {% endfor %}
@@ -55,25 +57,27 @@
             <div class="tarjeta">
                 <div class="tarjeta-producto">
                     {% if producto.imagen %}
-                    <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
-                {% else %}
+                    <a href="{{ url_for('producto', id=producto.id) }}">
+                        <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
+                    </a>
+                    {% else %}
                     <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Imagen no disponible" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
-                {% endif %}
-                <div>
-                    <p>{{ producto.nombre }}</p>
-                    <p>${{ producto.precio }}</p>
-                    <div class="product-buttons">
-                        <div>
-                            <button class="btn-buy">Buy</button>
-                        </div>
-                        <div class="buttons-carro">
-                            <form action="{{ url_for('agregar_al_carrito') }}" method="POST">
-                                <input type="hidden" name="producto_id" value="{{ producto.id }}">
-                                <button type="submit" class="btn-cart"><i data-feather="shopping-cart"></i></button>
-                            </form>
+                    {% endif %}
+                    <div>
+                        <p>{{ producto.nombre }}</p>
+                        <p>${{ producto.precio }}</p>
+                        <div class="product-buttons">
+                            <div>
+                                <a href="{{ url_for('producto', id=producto.id) }}"><button class="btn-buy">Buy</button></a>
+                            </div>
+                            <div class="buttons-carro">
+                                <form action="{{ url_for('agregar_al_carrito') }}" method="POST">
+                                    <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                                    <button type="submit" class="btn-cart"><i data-feather="shopping-cart"></i></button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
         {% endfor %}
@@ -85,25 +89,27 @@
             <div class="tarjeta">
                 <div class="tarjeta-producto">
                     {% if producto.imagen %}
-                    <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
-                {% else %}
+                    <a href="{{ url_for('producto', id=producto.id) }}">
+                        <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
+                    </a>
+                    {% else %}
                     <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Imagen no disponible" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
-                {% endif %}
-                <div>
-                    <p>{{ producto.nombre }}</p>
-                    <p>${{ producto.precio }}</p>
-                    <div class="product-buttons">
-                        <div>
-                            <button class="btn-buy">Buy</button>
-                        </div>
-                        <div class="buttons-carro">
-                            <form action="{{ url_for('agregar_al_carrito') }}" method="POST">
-                                <input type="hidden" name="producto_id" value="{{ producto.id }}">
-                                <button type="submit" class="btn-cart"><i data-feather="shopping-cart"></i></button>
-                            </form>
+                    {% endif %}
+                    <div>
+                        <p>{{ producto.nombre }}</p>
+                        <p>${{ producto.precio }}</p>
+                        <div class="product-buttons">
+                            <div>
+                                <a href="{{ url_for('producto', id=producto.id) }}"><button class="btn-buy">Buy</button></a>
+                            </div>
+                            <div class="buttons-carro">
+                                <form action="{{ url_for('agregar_al_carrito') }}" method="POST">
+                                    <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                                    <button type="submit" class="btn-cart"><i data-feather="shopping-cart"></i></button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
         {% endfor %}

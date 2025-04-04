@@ -43,6 +43,24 @@ def index():
 
     return render_template('index.html', productos=productos_json)
 
+@app.route('/producto/<int:id>')
+def producto(id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, nombre, descripcion, precio, categoria, imagen, stock FROM productos")
+    productos = cursor.fetchall()
+    conn.close()
+
+    productos_json = [
+        {"id": p[0], "nombre": p[1], "descripcion": p[2], "precio": p[3], "categoria": p[4], "imagen": p[5], "stock": p[6]}
+        for p in productos
+    ]
+
+    producto = next((item for item in productos_json if item['id'] == id), None)
+    if producto is None:
+        return "Producto no encontrado", 404
+
+    return render_template('product.html', producto=producto)
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
