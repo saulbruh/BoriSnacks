@@ -5,11 +5,28 @@
 {% endblock %}
 
 {% block body %}
-<div class="producto-detalle">
-    <h2>{{ producto.nombre }}</h2>
-    <p>{{ producto.stock }}</p>
-    <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}">
-    <p>${{ producto.precio }}</p>
-    <p>{{ producto.descripcion }}</p>
+<div class="producto">
+    <div class="producto-detalle">
+        <div class="product-page-img">
+            <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="img-product">
+        </div>
+        <div class="product-page-info">
+            <div class="product-page-details">
+                <h2>{{ producto.nombre }}</h2>
+                <div class="price-stock">
+                    <h3>${{ producto.precio }}</h3>
+                <h3>{{ producto.stock }} left</h3>
+                </div>
+            </div>
+            <div class="product-page-btns">
+                <button class="btn-buy product-buy">Buy</button>
+                <button class="btn-cart product-cart">Add To Cart</button>
+            </div>
+        </div>
+    </div>
+    <div class="product-about">
+        <p class="product-about-text">{{ producto.descripcion }}</p>
+    </div>
 </div>
+
 {% endblock %}
