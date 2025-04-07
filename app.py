@@ -268,8 +268,8 @@ def address():
         session['next'] = request.path  
         return redirect(url_for('login'))
     
-    # Obtener lista de países en español
-    countries = list(countries_for_language('es'))  
+    # Obtener lista de países en inglés
+    countries = list(countries_for_language('en'))  
 
     if request.method == 'POST':
         selected_country = request.form.get('country')
