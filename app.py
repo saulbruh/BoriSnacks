@@ -387,14 +387,14 @@ def reset_password(token):
 
     return render_template('reset_password.html', token=token)
 
-#Conexion a MariaDB sin ORM
+# Conexion a MariaDB usando variables de entorno
 def get_db_connection():
     return mariadb.connect(
-        user="railway",
-        password="Amdwzi-JlqxbQAzQFP~i-zZWK5L1J0P8",
-        host="switchyard.proxy.rlwy.net",
-        port=35476,
-        database="railway"
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        host=os.getenv("DB_HOST"),
+        port=int(os.getenv("DB_PORT")),
+        database=os.getenv("DB_NAME")
     )
 
 #Se crea el carro de compra y se le asigna a un usuario.
