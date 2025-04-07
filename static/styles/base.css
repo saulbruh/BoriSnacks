@@ -404,10 +404,21 @@ body {
 
 .btn-quantity {
   background-color: white;
-  padding: 5px 10px;
-  border-radius: 25px;
-  border-style: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
   color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* elimina padding extra */
+  transition: background-color 0.3s;
+}
+
+.btn-quantity:hover {
+  background-color: #f7f7f7;
 }
 
 .remove-btn {
@@ -418,10 +429,21 @@ body {
 
 .btn-delete {
   background-color: #e52737;
-  padding: 5px 10px;
-  border-radius: 25px;
-  border-style: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
   color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* elimina padding extra */
+  transition: background-color 0.3s;
+}
+
+.btn-delete:hover {
+  background-color: #c71f2e; /* un poco más oscuro que #e52737 */
 }
 
 .purchase-btns {
@@ -440,11 +462,24 @@ body {
 
 .purchase-buy {
   background-color: #28a745;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.purchase-buy:hover {
+  background-color: #218838;
 }
 
 .purchase-remove {
   background-color: #e52737;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
+
+.purchase-remove:hover {
+  background-color: #c71f2e;
+}
+
 /*  */
 
 /* Footer */

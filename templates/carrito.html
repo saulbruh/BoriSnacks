@@ -6,8 +6,6 @@
 
 {% block body %}
 <div class="container">
-    
-
     <div class="cart-container">
         <div class="cart-title">
             <h1>Shopping Cart</h1>
@@ -33,10 +31,10 @@
                                 <h3>${{ producto.precio }}</h3>
                             </div>
                             <div class="cart-item-left-element">
-                                <div class="quantity-btn">
-                                    <button class="btn-quantity"><i data-feather="minus"></i></button>
-                                    <p>{{ producto.cantidad }}</p>
-                                    <button class="btn-quantity"><i data-feather="plus"></i></button>
+                                <div class="quantity-btn" data-product-id="{{ producto.id }}">
+                                    <button class="btn-quantity btn-restar"><i data-feather="minus"></i></button>
+                                    <p class="cantidad">{{ producto.cantidad }}</p>
+                                    <button class="btn-quantity btn-sumar"><i data-feather="plus"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -45,31 +43,9 @@
             </div>
             <div class="purchase-btns">
                 <button class="purchase purchase-buy"><p>Check Out</p></button>
-                <button class="purchase purchase-remove"><p>Remove All</p></button>
+                <button class="purchase purchase-remove" id="btn-remove-all"><p>Remove All</p></button>
             </div>
         {% endif %}
     </div>
 </div>
-<script>
-document.querySelectorAll(".btn-delete").forEach(button => {
-    button.addEventListener("click", function(event) {
-        event.preventDefault();
-        let productoId = this.getAttribute("data-product-id");
-
-        fetch("/eliminar_del_carrito", {
-            method: "POST",
-            body: new URLSearchParams({ producto_id: productoId }),
-            headers: { "Content-Type": "application/x-www-form-urlencoded" }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert("Hubo un problema al eliminar el producto.");
-            }
-        });
-    });
-});
-</script>
 {% endblock %}

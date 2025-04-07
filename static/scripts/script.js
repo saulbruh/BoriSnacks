@@ -148,3 +148,91 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+// ─────────────────────────────
+// Funcionalidad de la página de carrito
+// ─────────────────────────────
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Botones de eliminar producto individual
+    document.querySelectorAll(".btn-delete").forEach(button => {
+        button.addEventListener("click", function(event) {
+            event.preventDefault();
+            let productoId = this.getAttribute("data-product-id");
+
+            fetch("/eliminar_del_carrito", {
+                method: "POST",
+                body: new URLSearchParams({ producto_id: productoId }),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert("Hubo un problema al eliminar el producto.");
+                }
+            });
+        });
+    });
+
+    // Botones para modificar cantidad
+    document.querySelectorAll(".quantity-btn").forEach(container => {
+        const productoId = container.getAttribute("data-product-id");
+        const cantidadElem = container.querySelector(".cantidad");
+
+        container.querySelector(".btn-sumar").addEventListener("click", () => {
+            modificarCantidad(productoId, "sumar", cantidadElem);
+        });
+
+        container.querySelector(".btn-restar").addEventListener("click", () => {
+            modificarCantidad(productoId, "restar", cantidadElem);
+        });
+    });
+
+    function modificarCantidad(productoId, accion, cantidadElem) {
+        fetch("/modificar_cantidad", {
+            method: "POST",
+            body: new URLSearchParams({
+                producto_id: productoId,
+                accion: accion
+            }),
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                let cantidadActual = parseInt(cantidadElem.textContent);
+                if (accion === "sumar") {
+                    cantidadElem.textContent = cantidadActual + 1;
+                } else if (accion === "restar" && cantidadActual > 1) {
+                    cantidadElem.textContent = cantidadActual - 1;
+                } else {
+                    location.reload();
+                }
+            } else {
+                alert("Error: " + (data.error || "No se pudo actualizar la cantidad."));
+            }
+        });
+    }
+
+    // Botón para vaciar todo el carrito
+    const btnRemoveAll = document.getElementById("btn-remove-all");
+    if (btnRemoveAll) {
+        btnRemoveAll.addEventListener("click", function () {
+            fetch("/vaciar_carrito", {
+                method: "POST"
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert("Error al vaciar el carrito.");
+                }
+            });
+        });
+    }
+});

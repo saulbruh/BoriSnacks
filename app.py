@@ -60,7 +60,11 @@ def producto(id):
     if producto is None:
         return "Producto no encontrado", 404
 
-    return render_template('product.html', producto=producto)
+    relacionados = [
+        p for p in productos_json if p['categoria'] == producto['categoria'] and p['id'] != id
+    ][:6]
+
+    return render_template('product.html', producto=producto, relacionados=relacionados)
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
@@ -193,6 +197,50 @@ def carrito():
 
     return render_template('carrito.html', usuario=session['user_name'], carrito_vacio=carrito_vacio, productos=productos)
 
+@app.route('/modificar_cantidad', methods=['POST'])
+def modificar_cantidad():
+    if 'user_id' not in session:
+        return jsonify(success=False, error="No autorizado")
+
+    producto_id = request.form.get('producto_id')
+    accion = request.form.get('accion')  # puede ser "sumar" o "restar"
+
+    if not producto_id or accion not in ['sumar', 'restar']:
+        return jsonify(success=False, error="Parámetros inválidos")
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
+    carrito = cursor.fetchone()
+
+    if not carrito:
+        conn.close()
+        return jsonify(success=False, error="Carrito no encontrado")
+
+    carrito_id = carrito[0]
+    cursor.execute("SELECT id, cantidad FROM carro_de_compra_items WHERE carro_de_compra_id = ? AND product_item_id = ?", (carrito_id, producto_id))
+    item = cursor.fetchone()
+
+    if not item:
+        conn.close()
+        return jsonify(success=False, error="Producto no encontrado en el carrito")
+
+    item_id, cantidad = item
+
+    if accion == 'sumar':
+        cursor.execute("UPDATE carro_de_compra_items SET cantidad = cantidad + 1 WHERE id = ?", (item_id,))
+    elif accion == 'restar' and cantidad > 1:
+        cursor.execute("UPDATE carro_de_compra_items SET cantidad = cantidad - 1 WHERE id = ?", (item_id,))
+    elif accion == 'restar' and cantidad <= 1:
+        cursor.execute("DELETE FROM carro_de_compra_items WHERE id = ?", (item_id,))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify(success=True)
+
 @app.route('/agregar_al_carrito', methods=['POST'])
 def agregar_al_carrito():
     if 'user_id' not in session:
@@ -255,6 +303,29 @@ def eliminar_del_carrito():
     conn.close()
 
     return jsonify({"success": True})
+
+@app.route('/vaciar_carrito', methods=['POST'])
+def vaciar_carrito():
+    if 'user_id' not in session:
+        return jsonify(success=False, error="No autorizado")
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
+    carrito = cursor.fetchone()
+
+    if not carrito:
+        conn.close()
+        return jsonify(success=False, error="Carrito no encontrado")
+
+    carrito_id = carrito[0]
+    cursor.execute("DELETE FROM carro_de_compra_items WHERE carro_de_compra_id = ?", (carrito_id,))
+    conn.commit()
+    conn.close()
+
+    return jsonify(success=True)
 
 @app.route('/profile')
 def usuario():
