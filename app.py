@@ -116,6 +116,24 @@ def login():
                 session['user_id'] = usuario_id
                 session['user_name'] = usuario_nombre
                 flash("Successfuly logged in", "success")
+                # Si el usuario intentó agregar un producto al carrito antes de iniciar sesión
+                if session.get('post_login_add_to_cart'):
+                    producto_id = session.pop('post_login_add_to_cart')
+                    carrito_id = get_or_create_cart(usuario_id)
+
+                    conn = get_db_connection()
+                    cursor = conn.cursor()
+
+                    cursor.execute("SELECT id FROM carro_de_compra_items WHERE carro_de_compra_id = ? AND product_item_id = ?", (carrito_id, producto_id))
+                    item = cursor.fetchone()
+
+                    if item:
+                        cursor.execute("UPDATE carro_de_compra_items SET cantidad = cantidad + 1 WHERE id = ?", (item[0],))
+                    else:
+                        cursor.execute("INSERT INTO carro_de_compra_items (carro_de_compra_id, product_item_id, cantidad) VALUES (?, ?, 1)", (carrito_id, producto_id))
+
+                    conn.commit()
+                    conn.close()
                 next_page = session.pop('next', url_for('index'))  # Obtener la página almacenada o redirigir a index
                 return redirect(next_page)
             else:
@@ -178,7 +196,10 @@ def carrito():
 @app.route('/agregar_al_carrito', methods=['POST'])
 def agregar_al_carrito():
     if 'user_id' not in session:
-        return jsonify({"error": "Debes iniciar sesión para agregar productos al carrito"}), 401
+        session['next'] = request.referrer or url_for('index')
+        session['post_login_add_to_cart'] = request.form.get('producto_id')
+        flash("You must log in to add products to your cart.", "warning")
+        return jsonify(success=False, redirect_to_login=url_for('login'))
 
     producto_id = request.form.get('producto_id')
 
@@ -202,7 +223,7 @@ def agregar_al_carrito():
     conn.commit()
     conn.close()
 
-    return redirect(url_for('carrito'))  # Redirige a la página del carrito después de agregar el producto
+    return jsonify(success=True)
 
 @app.route('/eliminar_del_carrito', methods=['POST'])
 def eliminar_del_carrito():

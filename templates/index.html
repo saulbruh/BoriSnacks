@@ -116,7 +116,9 @@
     </div>
 </div>
 
-<div id="cart-popup" class="cart-popup">This item was added to your cart</div>
+{% if 'user_id' in session %}
+    <div id="cart-popup" class="cart-popup">This item was added to your cart</div>
+{% endif %}
 
 <script src="{{ url_for('static', filename='scripts/carousel.js') }}"></script>
 {% endblock %}

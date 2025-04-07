@@ -109,21 +109,42 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-// Enseñar la lista de todos los productos en el index
-// document.addEventListener("DOMContentLoaded", function() {
-//     const allProductsHeader = document.querySelector("h2 i[data-feather='chevron-down']");
-//     const allProductsSection = document.querySelector(".tarjetas-todos");
+document.addEventListener("DOMContentLoaded", function() {
+    const cartForms = document.querySelectorAll("form[action$='agregar_al_carrito']");
+    const cartPopup = document.getElementById("cart-popup");
 
-//     if (allProductsHeader && allProductsSection) {
-//         allProductsSection.style.display = "none"; // Ocultar por defecto
+    cartForms.forEach(form => {
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // Previene la redirección
 
-//         allProductsHeader.addEventListener("click", function() {
-//             allProductsSection.style.display = 
-//                 allProductsSection.style.display === "none" ? "block" : "none";
-//         });
-//     } else {
-//         console.error("No se encontró el header o la sección de productos.");
-//         console.log("allProductsHeader:", allProductsHeader); // Verifica si el icono está seleccionado
-//         console.log("allProductsSection:", allProductsSection); // Verifica si la sección está seleccionada
-//     }
-// });
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: "POST",
+                body: new URLSearchParams(formData),
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    cartPopup.style.display = "block";
+                    setTimeout(() => {
+                        cartPopup.style.display = "none";
+                    }, 2000);
+
+                    // Opcional: actualizar el contador del carrito aquí
+                } else if (data.redirect_to_login) {
+                    window.location.href = data.redirect_to_login;
+                } else {
+                    alert("Error al agregar al carrito.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Error al agregar al carrito.");
+            });
+        });
+    });
+});
