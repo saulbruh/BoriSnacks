@@ -5,47 +5,49 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="cart-container">
-        <div class="cart-title">
-            <h1>Shopping Cart</h1>
-        </div>
-        {% if carrito_vacio %}
-            <p id="cart-empty-message" style="display: none;">Shopping cart is empty.</p>
-        {% else %}
-            <div class="cart-items">
-                {% for producto in productos %}
-                    <div class="cart-item">
-                        <div class="cart-product">
-                            <div class="remove-btn">
-                                <form action="{{ url_for('eliminar_del_carrito') }}" method="POST">
-                                    <input type="hidden" name="producto_id" value="{{ producto.id }}">
-                                    <button type="button" class="btn btn-danger btn-delete" data-product-id="{{ producto.id }}"><i data-feather="x"></i></button>
-                                </form>
-                            </div>
-                            <a href="{{ url_for('producto', id=producto.id) }}" class="cart-img-container">
-                                <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="cart-img" style="max-width: 100px;">
-                            </a>
-                            <div class="cart-details">
-                                <h2>{{ producto.nombre }}</h2>
-                                <h3>${{ producto.precio }}</h3>
-                            </div>
-                            <div class="cart-item-left-element">
-                                <div class="quantity-btn" data-product-id="{{ producto.id }}">
-                                    <button class="btn-quantity btn-restar"><i data-feather="minus"></i></button>
-                                    <p class="cantidad">{{ producto.cantidad }}</p>
-                                    <button class="btn-quantity btn-sumar"><i data-feather="plus"></i></button>
+<div class="padding-main-content">
+    <div class="container">
+        <div class="cart-container">
+            <div class="cart-title">
+                <h1>Shopping Cart</h1>
+            </div>
+            {% if carrito_vacio %}
+                <p id="cart-empty-message" style="display: none;">Shopping cart is empty.</p>
+            {% else %}
+                <div class="cart-items">
+                    {% for producto in productos %}
+                        <div class="cart-item">
+                            <div class="cart-product">
+                                <div class="remove-btn">
+                                    <form action="{{ url_for('eliminar_del_carrito') }}" method="POST">
+                                        <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                                        <button type="button" class="btn btn-danger btn-delete" data-product-id="{{ producto.id }}"><i data-feather="x"></i></button>
+                                    </form>
+                                </div>
+                                <a href="{{ url_for('producto', id=producto.id) }}" class="cart-img-container">
+                                    <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" class="cart-img" style="max-width: 100px;">
+                                </a>
+                                <div class="cart-details">
+                                    <h2>{{ producto.nombre }}</h2>
+                                    <h3>${{ producto.precio }}</h3>
+                                </div>
+                                <div class="cart-item-left-element">
+                                    <div class="quantity-btn" data-product-id="{{ producto.id }}">
+                                        <button class="btn-quantity btn-restar"><i data-feather="minus"></i></button>
+                                        <p class="cantidad">{{ producto.cantidad }}</p>
+                                        <button class="btn-quantity btn-sumar"><i data-feather="plus"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="purchase-btns">
-                <button class="purchase purchase-buy"><p>Check Out</p></button>
-                <button class="purchase purchase-remove" id="btn-remove-all"><p>Remove All</p></button>
-            </div>
-        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="purchase-btns">
+                    <button class="purchase purchase-buy"><p>Check Out</p></button>
+                    <button class="purchase purchase-remove" id="btn-remove-all"><p>Remove All</p></button>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

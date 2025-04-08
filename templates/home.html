@@ -2,6 +2,10 @@
 
 
 {% block content %}
-    <h1>Hello, {{ session.user_name }}</h1>
-    <p>This is your homepage.</p>
+<div class="user-home-section">
+    <div class="user-home-section-content">
+        <h1>Hello, {{ session.user_name }}</h1>
+        <p>This is your homepage.</p>
+    </div>
+</div>
 {% endblock %}

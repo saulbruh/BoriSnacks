@@ -5,9 +5,10 @@
 {% endblock %}
 
 {% block body %}
-<div class="section">
-  <h2>All products</h2>
-    <div class="tarjetas-todos">
+<div class="padding-main-content">
+  <div class="section">
+    <h2>All products</h2>
+      <div class="tarjetas-todos">
         {% for producto in productos %}
             <div class="tarjeta">
                 <div class="tarjeta-producto">
@@ -37,5 +38,6 @@
             </div>
         {% endfor %}
     </div>
+</div>
 </div>
 {% endblock %}
