@@ -367,6 +367,25 @@ def address():
         selected_country = request.form.get('country')
         flash(f"País seleccionado: {selected_country}", "success")  # Solo muestra un mensaje, no lo guarda aún.
 
+    if request.method == 'POST':
+        calle1 = request.form['calle1']
+        calle2 = request.form['calle2']
+        ciudad = request.form['ciudad']
+        pais = request.form['pais']
+        codigo_postal = request.form['codigo_postal']
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute("INSERT INTO direcciones (user_id, calle1, calle2, ciudad, pais, codigo_postal) VALUES (?, ?, ?, ?, ?, ?)", 
+                            (session['user_id'], calle1, calle2, ciudad, pais, codigo_postal))
+            conn.commit()
+        except mariadb.IntegrityError:
+            return "Error: Invalide Address."
+        finally:
+            conn.close()
+
     return render_template('address.html', countries=countries)
 
 # Ruta para la página de ajustes
