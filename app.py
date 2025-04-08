@@ -363,6 +363,23 @@ def address():
     # Obtener lista de países en inglés
     countries = list(countries_for_language('en'))  
 
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, user_id, calle1, calle2, ciudad, pais, codigo_postal FROM direcciones WHERE user_id = ?", (session['user_id'],))
+    direcciones_db = cursor.fetchall()
+    direcciones = [
+    {
+        "id": d[0],
+        "user_id": d[1],
+        "calle1": d[2],
+        "calle2": d[3],
+        "ciudad": d[4],
+        "pais": d[5],
+        "codigo_postal": d[6]
+    } for d in direcciones_db
+]
+    conn.close()
+
     if request.method == 'POST':
         selected_country = request.form.get('country')
         flash(f"País seleccionado: {selected_country}", "success")  # Solo muestra un mensaje, no lo guarda aún.
@@ -385,8 +402,29 @@ def address():
             return "Error: Invalide Address."
         finally:
             conn.close()
+        return redirect(url_for('address'))
+    return render_template('address.html', countries=countries, direcciones=direcciones)
 
-    return render_template('address.html', countries=countries)
+@app.route('/delete_address', methods=['POST'])
+def delete_address():
+    if 'user_id' not in session:
+        flash("Debes iniciar sesión para eliminar una dirección.", "warning")
+        return redirect(url_for('login'))
+
+    direccion_id = request.form.get('direccion_id')
+
+    if not direccion_id:
+        flash("ID de dirección no proporcionado.", "danger")
+        return redirect(url_for('address'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM direcciones WHERE id = ? AND user_id = ?", (direccion_id, session['user_id']))
+    conn.commit()
+    conn.close()
+
+    flash("Dirección eliminada con éxito.", "success")
+    return redirect(url_for('address'))
 
 # Ruta para la página de ajustes
 @app.route('/profile/settings')

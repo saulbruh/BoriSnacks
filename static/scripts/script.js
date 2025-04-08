@@ -65,49 +65,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    const deleteButtons = document.querySelectorAll(".btn-delete");
 
-    deleteButtons.forEach(button => {
-        button.addEventListener("click", function(event) {
-            event.preventDefault(); // Evita la recarga de la página
-
-            const productoId = this.getAttribute("data-product-id");
-            const cartItem = this.closest(".cart-item");
-
-            if (confirm("¿Seguro que quieres eliminar este producto del carrito?")) {
-                fetch("/eliminar_del_carrito", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: `producto_id=${productoId}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Remover visualmente el producto del carrito
-                        cartItem.remove();
-
-                        // Verificar si hay productos restantes en el carrito
-                        if (document.querySelectorAll(".cart-item").length === 0) {
-                            document.getElementById("cart-empty-message").style.display = "block";
-                        }
-
-                        // Actualizar el contador del carrito si tienes uno
-                        const cartCount = document.getElementById("cart-count");
-                        if (cartCount) {
-                            cartCount.textContent = parseInt(cartCount.textContent) - 1;
-                        }
-                    } else {
-                        alert("Hubo un error al eliminar el producto.");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-            }
-        });
-    });
-});
 
 document.addEventListener("DOMContentLoaded", function() {
     const cartForms = document.querySelectorAll("form[action$='agregar_al_carrito']");
@@ -236,3 +194,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+
+function toggleFormulario() {
+    const formulario = document.getElementById("formulario-direccion");
+    if (formulario) {
+        formulario.style.display = formulario.style.display === "none" ? "block" : "none";
+    }
+}
