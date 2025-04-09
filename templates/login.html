@@ -14,11 +14,9 @@
       <form action="/login" method="POST">
         <label for="correo">Email</label>
         <input type="email" id="correo" name="correo" placeholder="johndoe@email.com" required autofocus>
-        <br>
 
         <label for="contraseña">Password</label>
         <input type="password" id="contraseña" name="contraseña" placeholder="Password" required>
-        <br>
 
         <button type="submit">Log in</button>
       </form>
@@ -33,14 +31,12 @@
     {% endwith %}
     </div>
 
+    <p>Don't have an account? <a href="/registro">Create one!</a></p>
     <p>Forgot your password? <a href="#" onclick="document.getElementById('reset-password-form').style.display = 'block';">Recover it here!</a></p>
     <form id="reset-password-form" method="POST" action="{{ url_for('reset_password_request') }}" style="display: none;">
       <input type="email" name="correo" placeholder="Enter you email:" required>
       <button type="submit">Send password reset link</button>
     </form>
-
-    <p>Don't have an account? <a href="/registro">Create one!</a></p>
-    
   </div>
   <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 </body>

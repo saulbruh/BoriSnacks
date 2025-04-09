@@ -299,6 +299,7 @@ body {
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-size: large;
 }
 
 .sidebar a {
@@ -324,8 +325,7 @@ body {
 .main-content-user {
   background-color: #f7f7f7;
   flex: 1;
-  padding: 30px 30px !important;
-  width: 100%;
+  padding: 30px;
 }
 
 .user-home-section {
@@ -345,6 +345,91 @@ body {
   justify-content: center;
   margin-top: auto;
 }
+
+.address {
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+  padding: 30px 30px 0px 0px;
+  gap: 20px;
+}
+
+.address-container {
+  display: flex;
+  margin-top: auto;
+  gap: 20px;
+}
+
+.address-container-item {
+  background-color: #dedddd77;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  font-size: larger;
+  gap: 25px;
+}
+
+.left-address {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: auto;
+}
+
+.address-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: large;
+}
+
+#formulario-direccion {
+  padding-top: 50px;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.address-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Delete button styles */
+.btn-delete-address {
+  background-color: #e52737;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-address-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-delete-address:hover {
+  background-color: #c71f2e;
+}
+
+
 
 /* About Us */
 .about {
@@ -663,4 +748,27 @@ body {
   font-size: 20px;
   line-height: 1.5;
 }
-/*  */
+
+/* New input text styles */
+.input-text {
+  padding: 15px;
+  font-size: large;
+  width: 90%;
+  margin-bottom: 10px;
+  background-color: #e7e5e5;
+  color: black;
+  border-radius: 12px;
+  border: none;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.input-text::placeholder {
+  color: #a9a9a9;
+}
+
+.address-form-container button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+}

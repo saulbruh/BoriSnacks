@@ -9,14 +9,15 @@
     <aside class="sidebar">
         <h2>Menu</h2>
         <ul class="sidebar-menu">
-            <li><a href="{{ url_for('home') }}">Profile</a></li>
-            <li><a href="{{ url_for('orders') }}">Orders</a></li>
-            <li><a href="{{ url_for('address') }}">Address</a></li>
-            <li><a href="{{ url_for('settings') }}">Settings</a></li>
+            <a href="{{ url_for('home') }}"><li>Profile</li></a>
+            <a href="{{ url_for('orders') }}"><li>Orders</li></a>
+            <a href="{{ url_for('address') }}"><li>Address</li></a>
+            <a href="{{ url_for('settings') }}"><li>Settings</li></a>
         </ul>
     </aside>
     <main class="main-content-user">
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </main>
 </div>
 {% endblock %}
