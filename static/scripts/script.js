@@ -202,3 +202,29 @@ function toggleFormulario() {
         formulario.style.display = formulario.style.display === "none" ? "block" : "none";
     }
 }
+
+ //Añadir dirección teniendo una ya establecida.
+document.addEventListener("DOMContentLoaded", function () {
+    const nuevaDireccionRadio = document.querySelector('input[name="direccion_id"][value=""]');
+    const direccionRadios = document.querySelectorAll('input[name="direccion_id"]');
+    const formNuevaDireccion = document.getElementById("form-nueva-direccion");
+
+    if (formNuevaDireccion && nuevaDireccionRadio) {
+        direccionRadios.forEach(radio => {
+            radio.addEventListener("change", function () {
+                if (nuevaDireccionRadio.checked) {
+                    formNuevaDireccion.style.display = "block";
+                    // Hacer campos requeridos excepto calle2
+                    formNuevaDireccion.querySelectorAll('input').forEach(input => {
+                        if (input.name !== 'calle2') input.setAttribute('required', 'required');
+                    });
+                } else {
+                    formNuevaDireccion.style.display = "none";
+                    formNuevaDireccion.querySelectorAll('input').forEach(input => {
+                        input.removeAttribute('required');
+                    });
+                }
+            });
+        });
+    }
+});

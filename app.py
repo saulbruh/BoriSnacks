@@ -327,6 +327,159 @@ def vaciar_carrito():
 
     return jsonify(success=True)
 
+@app.route('/crear_orden', methods=['GET'])
+def crear_orden():
+    if 'user_id' not in session:
+        session['next'] = request.path
+        flash("You must be logged in to complete your order.", "warning")
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Obtener ID del carrito
+    cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (session['user_id'],))
+    carrito = cursor.fetchone()
+    if not carrito:
+        conn.close()
+        flash("Your cart is empty.", "warning")
+        return redirect(url_for('carrito'))
+
+    carrito_id = carrito[0]
+
+    # Obtener productos del carrito
+    cursor.execute("""
+          SELECT p.id, p.nombre, p.precio, p.imagen, ci.cantidad 
+          FROM carro_de_compra_items ci
+          JOIN productos p ON ci.product_item_id = p.id
+          WHERE ci.carro_de_compra_id = ?
+      """, (carrito_id,))
+    productos_carrito = cursor.fetchall()
+
+    productos = [
+          {"id": p[0], "nombre": p[1], "precio": p[2], "imagen": p[3], "cantidad": p[4], "subtotal": p[2] * p[4]}
+          for p in productos_carrito
+      ]
+    total = sum(p["subtotal"] for p in productos)
+
+    # Obtener direcciones del usuario
+    cursor.execute("SELECT id, calle1, calle2, ciudad, pais, codigo_postal FROM direcciones WHERE user_id = ?", (session['user_id'],))
+    direcciones_db = cursor.fetchall()
+    direcciones = [
+          {
+              "id": d[0],
+              "calle1": d[1],
+              "calle2": d[2],
+              "ciudad": d[3],
+              "pais": d[4],
+              "codigo_postal": d[5]
+          } for d in direcciones_db
+      ]
+    conn.close()
+    countries = list(countries_for_language('en'))
+    return render_template('crear_orden.html', productos=productos, total=total, direcciones=direcciones, countries=countries)
+
+@app.route('/procesar_orden', methods=['POST'])
+def procesar_orden():
+    if 'user_id' not in session:
+        flash("Debes iniciar sesión para completar tu orden.", "warning")
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Validar dirección
+    direccion_id = request.form.get('direccion_id')
+    if not direccion_id:
+        # Intentar crear una nueva dirección
+        calle1 = request.form.get('calle1')
+        ciudad = request.form.get('ciudad')
+        pais = request.form.get('pais')
+        codigo_postal = request.form.get('codigo_postal')
+
+        if not all([calle1, ciudad, pais, codigo_postal]):
+            flash("Todos los campos de dirección son obligatorios.", "danger")
+            return redirect(url_for('crear_orden'))
+
+        cursor.execute("""
+            INSERT INTO direcciones (user_id, calle1, calle2, ciudad, pais, codigo_postal)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            user_id,
+            calle1,
+            request.form.get('calle2'),
+            ciudad,
+            pais,
+            codigo_postal
+        ))
+        conn.commit()
+        direccion_id = cursor.lastrowid
+
+    # Validar campos de pago
+    campos_pago = ['nombre_tarjeta', 'numero_tarjeta', 'expiracion', 'cvc']
+    for campo in campos_pago:
+        if not request.form.get(campo):
+            flash("Todos los campos del método de pago son requeridos.", "danger")
+            return redirect(url_for('crear_orden'))
+
+    # Obtener carrito
+    cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
+    carrito = cursor.fetchone()
+    if not carrito:
+        flash("Tu carrito está vacío.", "danger")
+        return redirect(url_for('carrito'))
+
+    carrito_id = carrito[0]
+    cursor.execute("""
+        SELECT product_item_id, cantidad 
+        FROM carro_de_compra_items 
+        WHERE carro_de_compra_id = ?
+    """, (carrito_id,))
+    items = cursor.fetchall()
+
+    if not items:
+        flash("Tu carrito está vacío.", "danger")
+        return redirect(url_for('carrito'))
+
+    # Crear orden
+    metodo_pago = "Tarjeta"  # En el futuro puedes extraerlo del formulario si quieres múltiples métodos
+    
+    # Calcular el total sumando los subtotales de los productos
+    total = 0
+    for item in items:
+        producto_id, cantidad = item
+        cursor.execute("SELECT precio FROM productos WHERE id = ?", (producto_id,))
+        precio = cursor.fetchone()[0]
+        total += precio * cantidad
+
+    cursor.execute("""
+        INSERT INTO ordenes (user_id, direccion_id, metodo_pago, total, fecha_orden)
+        VALUES (?, ?, ?, ?, NOW())
+    """, (user_id, direccion_id, metodo_pago, total))
+    orden_id = cursor.lastrowid
+
+    for item in items:
+        producto_id, cantidad = item
+        cursor.execute("SELECT precio FROM productos WHERE id = ?", (producto_id,))
+        precio = cursor.fetchone()[0]
+
+        cursor.execute("""
+            INSERT INTO orden_items (orden_id, product_id, cantidad, precio_unitario)
+            VALUES (?, ?, ?, ?)
+        """, (orden_id, producto_id, cantidad, precio))
+
+        # Restar del stock
+        cursor.execute("UPDATE productos SET stock = stock - ? WHERE id = ?", (cantidad, producto_id))
+
+    # Vaciar carrito
+    cursor.execute("DELETE FROM carro_de_compra_items WHERE carro_de_compra_id = ?", (carrito_id,))
+    conn.commit()
+    conn.close()
+
+    flash("Orden procesada exitosamente.", "success")
+    return redirect(url_for('orders'))
+
 @app.route('/profile')
 def usuario():
     if 'user_name' in session:
@@ -351,8 +504,33 @@ def orders():
     if 'user_id' not in session:
         session['next'] = request.path  
         return redirect(url_for('login'))
-    else:
-        return render_template('orders.html')
+    
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+          SELECT o.id, o.fecha_orden, o.metodo_pago, o.total, 
+                 d.calle1, d.ciudad, d.pais
+          FROM ordenes o
+          JOIN direcciones d ON o.direccion_id = d.id
+          WHERE o.user_id = ?
+          ORDER BY o.fecha_orden DESC
+      """, (user_id,))
+    ordenes_db = cursor.fetchall()
+    
+    ordenes = []
+    for orden in ordenes_db:
+        ordenes.append({
+            "id": orden[0],
+            "fecha": orden[1],
+            "metodo_pago": orden[2],
+            "total": orden[3],
+            "direccion": f"{orden[4]}, {orden[5]}, {orden[6]}"
+        })
+    
+    conn.close()
+    return render_template('orders.html', ordenes=ordenes)
 
 @app.route('/profile/address', methods=['GET', 'POST'])
 def address():

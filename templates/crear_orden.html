@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>BoriSnacks - Confirmar Orden</title>
+{% endblock %}
+
+{% block body %}
+<div class="padding-main-content">
+  <div class="container">
+    <h1>Confirmar Orden</h1>
+
+    <!-- Lista de productos -->
+    <h2>Productos en tu carrito</h2>
+    <ul>
+      {% for producto in productos %}
+        <li>
+          {{ producto.nombre }} ({{ producto.cantidad }} x ${{ producto.precio }}) = ${{ producto.subtotal }}
+        </li>
+      {% endfor %}
+    </ul>
+    <p><strong>Total a pagar:</strong> ${{ total }}</p>
+
+    <!-- Dirección de envío -->
+    <h2>Dirección de Envío</h2>
+    {% if direcciones %}
+  <form method="POST" action="{{ url_for('procesar_orden') }}" id="orden-form">
+    {% for direccion in direcciones %}
+      <div>
+        <input type="radio" name="direccion_id" value="{{ direccion.id }}" required onclick="toggleNuevaDireccion(false)">
+        {{ direccion.calle1 }}, {{ direccion.ciudad }}, {{ direccion.pais }} {{ direccion.codigo_postal }}
+      </div>
+    {% endfor %}
+    <div>
+      <input type="radio" name="direccion_id" value="" onclick="toggleNuevaDireccion(true)">
+      <strong>Añadir nueva dirección</strong>
+    </div>
+    <div id="form-nueva-direccion" style="display: none; margin-top: 10px;">
+      <label>Calle 1:</label>
+      <input type="text" name="calle1"><br>
+
+      <label>Calle 2:</label>
+      <input type="text" name="calle2"><br>
+
+      <label>Ciudad:</label>
+      <input type="text" name="ciudad"><br>
+
+      <label>País:</label>
+      <select name="pais">
+        <option value="" disabled selected>Selecciona un país</option>
+        {% for code, country in countries %}
+          <option value="{{ code }}">{{ country }}</option>
+        {% endfor %}
+      </select><br>
+
+      <label>Código Postal:</label>
+      <input type="text" name="codigo_postal"><br>
+    </div>
+  {% else %}
+    <p>No tienes direcciones guardadas. Agrega una:</p>
+    <form method="POST" action="{{ url_for('procesar_orden') }}" id="orden-form">
+      <div id="form-nueva-direccion">
+        <label>Calle 1:</label><input type="text" name="calle1" required><br>
+        <label>Calle 2:</label><input type="text" name="calle2"><br>
+        <label>Ciudad:</label><input type="text" name="ciudad" required><br>
+        <label>País:</label>
+        <select name="pais" required>
+          <option value="" disabled selected>Selecciona un país</option>
+          {% for code, country in countries %}
+            <option value="{{ code }}">{{ country }}</option>
+          {% endfor %}
+        </select><br>
+        <label>Código Postal:</label><input type="text" name="codigo_postal" required><br>
+      </div>
+  {% endif %}
+
+    <!-- Formulario de pago -->
+    <h2>Método de Pago</h2>
+    <div>
+      <label>Nombre en la tarjeta:</label><input type="text" name="nombre_tarjeta" required><br>
+      <label>Número de tarjeta:</label><input type="text" name="numero_tarjeta" required><br>
+      <label>Fecha de expiración:</label><input type="text" name="expiracion" placeholder="MM/AA" required><br>
+      <label>CVC:</label><input type="text" name="cvc" required><br>
+    </div>
+
+    <!-- Botón de pagar -->
+    <button type="submit">Pay</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

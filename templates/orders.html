@@ -1,5 +1,21 @@
 {% extends 'user.html' %}
 {% block content %}
-    <h1>Orders</h1>
-    <p>Here are your orders</p>
+<h1>Mis Órdenes</h1>
+
+{% if ordenes %}
+  <ul>
+    {% for orden in ordenes %}
+      <li>
+        <strong>Orden #{{ orden.id }}</strong><br>
+        Fecha: {{ orden.fecha }}<br>
+        Método de pago: {{ orden.metodo_pago }}<br>
+        Total: ${{ orden.total }}<br>
+        Enviado a: {{ orden.direccion }}
+      </li>
+      <hr>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No tienes órdenes registradas aún.</p>
+{% endif %}
 {% endblock %}

@@ -43,7 +43,9 @@
                     {% endfor %}
                 </div>
                 <div class="purchase-btns">
-                    <button class="purchase purchase-buy"><p>Check Out</p></button>
+                    <form action="{{ url_for('crear_orden') }}" method="GET" style="display: inline;">
+                        <button class="purchase purchase-buy"><p>Check Out</p></button>
+                    </form>
                     <button class="purchase purchase-remove" id="btn-remove-all"><p>Remove All</p></button>
                 </div>
             {% endif %}
