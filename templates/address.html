@@ -1,70 +1,73 @@
 {% extends 'user.html' %}
 {% block content %}
 <div class="address">
-    <div class="left-address">
-        <div>
-            <h2>Address</h2>
-        </div>
-        {% if direcciones %}
-        <div class="address-container">
-            {% for direccion in direcciones %}
-            <div class="address-container-item">
-                <div>
-                    <p>{{ direccion.calle1 }},</p>
-                    <p>{{ direccion.calle2 }}</p>
-                </div>
-                <div>
-                    <p>{{ direccion.ciudad }}, {{ direccion.pais }} {{ direccion.codigo_postal }}</p>
-                </div>
-                <div class="delete-address-container">
-                    <form action="{{ url_for('delete_address') }}" method="POST">
-                      <input type="hidden" name="direccion_id" value="{{ direccion.id }}">
-                      <button class="btn-delete-address" type="submit">Delete</button>
-                    </form>
-                  </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <div>
-            <p>You don't have any saved addresses.</p>
-        </div>
-        {% endif %}
+    <div>
+        <h2>Address</h2>
     </div>
-    
-    <div class="address-form-container">
-        <button type="button" onclick="toggleFormulario()">Add new address</button>
-        <div id="formulario-direccion" style="display: none;">
-            <form class="address-form" action="/profile/address" method="POST">
-                <label for="calle1">Address:</label>
-                <input placeholder="Street address" type="text" id="calle1" name="calle1" required class="input-text">
 
-                <label for="calle2">Apartment, suite, etc:</label>
-                <input placeholder="Apartment, suite, etc" type="text" id="calle2" name="calle2" class="input-text">
+    <div class="address-box">
+        <div class="left-address">    
+            {% if direcciones %}
+            <div class="address-container">
+                {% for direccion in direcciones %}
+                <div class="address-container-item">
+                    <div>
+                        <p>{{ direccion.calle1 }},</p>
+                        <p>{{ direccion.calle2 }}</p>
+                    </div>
+                    <div>
+                        <p>{{ direccion.ciudad }}, {{ direccion.pais }} {{ direccion.codigo_postal }}</p>
+                    </div>
+                    <div class="delete-address-container">
+                        <form action="{{ url_for('delete_address') }}" method="POST">
+                        <input type="hidden" name="direccion_id" value="{{ direccion.id }}">
+                        <button class="btn-delete-address" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div>
+                <p>You don't have any saved addresses.</p>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="address-form-container">
+            <button type="button" onclick="toggleFormulario()"><i data-feather="plus"></i></button>
+            <div id="formulario-direccion" style="display: none;">
+                <form class="address-form" action="/profile/address" method="POST">
+                    <label for="calle1">Address:</label>
+                    <input placeholder="Street address" type="text" id="calle1" name="calle1" required class="input-text">
 
-                <label for="ciudad">City:</label>
-                <input placeholder="City" type="text" id="ciudad" name="ciudad" required class="input-text">
+                    <label for="calle2">Apartment, suite, etc:</label>
+                    <input placeholder="Apartment, suite, etc" type="text" id="calle2" name="calle2" class="input-text">
 
-                <label for="pais">Country:</label>
-                <select placeholder="Country" name="pais" id="pais" required class="input-text">
-                    <option value="" disabled selected> Select a country </option>
-                    {% for code, country in countries %}
-                        <option value="{{ code }}">{{ country }}</option>
-                    {% endfor %}
-                </select>
+                    <label for="ciudad">City:</label>
+                    <input placeholder="City" type="text" id="ciudad" name="ciudad" required class="input-text">
 
-                <label for="codigo_postal">ZIP/postal code:</label>
-                <input placeholder="ZIP/postal code" type="text" id="codigo_postal" name="codigo_postal" required class="input-text">
+                    <label for="pais">Country:</label>
+                    <select placeholder="Country" name="pais" id="pais" required class="input-text">
+                        <option value="" disabled selected> Select a country </option>
+                        {% for code, country in countries %}
+                            <option value="{{ code }}">{{ country }}</option>
+                        {% endfor %}
+                    </select>
 
+                    <label for="codigo_postal">ZIP/postal code:</label>
+                    <input placeholder="ZIP/postal code" type="text" id="codigo_postal" name="codigo_postal" required class="input-text">
+
+                    <!-- user_id puede venir del backend si el usuario está autenticado -->
+                    <input type="hidden" name="user_id" value="{{ user_id }}">
+
+                
                 <!-- user_id puede venir del backend si el usuario está autenticado -->
                 <input type="hidden" name="user_id" value="{{ user_id }}">
 
-            
-            <!-- user_id puede venir del backend si el usuario está autenticado -->
-            <input type="hidden" name="user_id" value="{{ user_id }}">
-
-            <button type="submit">Save Address</button>
-            </form>
+                <button type="submit">Save Address</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
