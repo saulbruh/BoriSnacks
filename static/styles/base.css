@@ -360,8 +360,9 @@ body {
 .user-home-section {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: auto auto auto;
   gap: 8px;
+  color: #333;
 }
 
 .user-section-banner {
@@ -369,15 +370,96 @@ body {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #e9e9e9;
+  padding-bottom: 115px;
 }
 
-.div2 {
+.user-info-container {
   grid-row-start: 2;
   border-right: 1px solid #e9e9e9;
 }
 
+.user-info-container-items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  padding-right: 25px;
+  padding-top: 50px;
+}
+
+.user-info-container-items-left {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.user-info-container-items-left p {
+  font-size: 20px;
+  background-color: #dedddd77;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.user-info-container-items-right {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.user-info-container-items-right p {
+  font-size: 20px;
+  background-color: #dedddd77;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+
+
 .recent-orders-container {
   grid-row-start: 2;
+}
+
+.recent-orders-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recent-orders-list {
+  display: flex;
+  gap: 50px;
+}
+
+.recent-orders-list-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #dedddd77;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.recent-orders-list-container-btn {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 25px;
+  padding-bottom: 15px;
+}
+
+.btn-see-all {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+}
+
+.btn-see-all:hover {
+  background-color: #218838;
 }
 
 .address-home-container {
@@ -401,7 +483,7 @@ body {
   overflow-x: auto;
   white-space: nowrap;
   gap: 20px;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
 }
 
 .address-container {
@@ -422,10 +504,19 @@ body {
 .address-form-container a {
   color: #333;
   text-decoration: none;
-  padding: 15px;
-  margin-left: 15px;
-  border-radius: 10px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
   background-color: #dedddd77;
+  padding: 0;
+  transition: background-color 0.3s;
+}
+
+.address-form-container a:hover {
+  background-color: #bfbfbf77;
 }
 
 

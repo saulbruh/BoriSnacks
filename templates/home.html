@@ -11,23 +11,36 @@
             <p>Member since: </p>
         </div>
     </div>
-    <div class="div2">2</div>
+    <div class="user-info-container">
+        <h3>User Information</h3>
+        <div class="user-info-container-items">
+            <div class="user-info-container-items-left">
+                <p><strong>Full Name:</strong> {{ session.user_name }} {{ session.user_lastname }}</p>
+                <p><strong>Email:</strong> {{ session.user_email }}</p>
+            </div>
+            <div class="user-info-container-items-right">
+                <p><strong>Total Purchases:</strong> {{ total_ordenes }}</p>
+                <p><strong>Member Since:</strong> <!-- future date placeholder --></p>
+            </div>
+        </div>
+    </div>
     <div class="recent-orders-container">
         <h3>Recent Orders</h3>
         {% if ordenes_recientes %}
-        <ul class="recent-orders-list">
-            {% for orden in ordenes_recientes %}
-            <li>
-                <strong>Order #{{ orden.id }}</strong><br>
-                Date: {{ orden.fecha }}<br>
-                Total: ${{ orden.total }}<br>
-                Sent to: {{ orden.direccion }}
-            </li>
-            <hr>
-            {% endfor %}
-        </ul>
-        <div style="text-align: right; margin-top: 1em;">
-            <a href="{{ url_for('orders') }}" class="btn-see-all">See all</a>
+        <div class="recent-orders-list-container">
+            <ul class="recent-orders-list">
+                {% for orden in ordenes_recientes %}
+                <li class="recent-orders-list-item">
+                    <p><strong>Order #{{ orden.id }}</strong></p>
+                    <p>Date: {{ orden.fecha }}</p>
+                    <p>Total: ${{ orden.total }}</p>
+                    <p>Sent to: {{ orden.direccion }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="recent-orders-list-container-btn">
+                <a href="{{ url_for('orders') }}" class="btn-see-all">See all</a>
+            </div>
         </div>
         {% else %}
         <p>You don't have any recent orders.</p>
@@ -66,32 +79,9 @@
             </div>
 
             <div class="address-form-container">
-                <a href="{{ url_for('register_address') }}"><i data-feather="plus"></i></a>
-                <div id="formulario-direccion" style="display: none;">
-                    <form class="address-form" action="{{ url_for('home') }}" method="POST">
-                        <label for="calle1">Address:</label>
-                        <input placeholder="Street address" type="text" id="calle1" name="calle1" required class="input-text">
-
-                        <label for="calle2">Apartment, suite, etc:</label>
-                        <input placeholder="Apartment, suite, etc" type="text" id="calle2" name="calle2" class="input-text">
-
-                        <label for="ciudad">City:</label>
-                        <input placeholder="City" type="text" id="ciudad" name="ciudad" required class="input-text">
-
-                        <label for="pais">Country:</label>
-                        <select placeholder="Country" name="pais" id="pais" required class="input-text">
-                            <option value="" disabled selected> Select a country </option>
-                            {% for code, country in countries %}
-                                <option value="{{ code }}">{{ country }}</option>
-                            {% endfor %}
-                        </select>
-
-                        <label for="codigo_postal">ZIP/postal code:</label>
-                        <input placeholder="ZIP/postal code" type="text" id="codigo_postal" name="codigo_postal" required class="input-text">
-
-                        <button type="submit">Save Address</button>
-                    </form>
-                </div>
+                <a href="{{ url_for('register_address') }}">
+                    <i data-feather="plus"></i>
+                </a>
             </div>
         </div>
     </div>

@@ -110,15 +110,17 @@ def login():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT id, nombre, hashed_password FROM usuarios WHERE correo_electronico = ?", (correo,))
+        cursor.execute("SELECT id, nombre, apellido, correo_electronico, hashed_password FROM usuarios WHERE correo_electronico = ?", (correo,))
         user = cursor.fetchone()
         conn.close()
 
         if user:
-            usuario_id, usuario_nombre, hashed_password = user
+            usuario_id, usuario_nombre, usuario_apellido, usuario_email, hashed_password = user
             if check_password_hash(hashed_password, contraseña):
                 session['user_id'] = usuario_id
                 session['user_name'] = usuario_nombre
+                session['user_email'] = usuario_email
+                session['user_lastname'] = usuario_apellido
                 flash("Successfuly logged in", "success")
                 # Si el usuario intentó agregar un producto al carrito antes de iniciar sesión
                 if session.get('post_login_add_to_cart'):
@@ -580,9 +582,11 @@ def home():
             "direccion": f"{o[3]}, {o[4]}, {o[5]}"
         } for o in ordenes_db
     ]
+    cursor.execute("SELECT COUNT(*) FROM ordenes WHERE user_id = ?", (session['user_id'],))
+    total_ordenes = cursor.fetchone()[0]
     conn.close()
     countries = list(countries_for_language('en'))
-    return render_template('home.html', direcciones=direcciones, countries=countries, ordenes_recientes=ordenes_recientes)
+    return render_template('home.html', direcciones=direcciones, countries=countries, ordenes_recientes=ordenes_recientes, total_ordenes=total_ordenes, session=session)
 
 # Ruta para la página de órdenes
 @app.route('/profile/orders')
