@@ -3,14 +3,6 @@
 
 {% block content %}
 <div class="user-home-section">
-    <div class="user-section-banner">
-        <div>
-            <h2>Hello, {{ session.user_name }}</h2>
-        </div>
-        <div>
-            <p>Member since: </p>
-        </div>
-    </div>
     <div class="user-info-container">
         <h3>User Information</h3>
         <div class="user-info-container-items">
@@ -61,8 +53,7 @@
                             </form>
                         </div>
                         <div>
-                            <p>{{ direccion.calle1 }},</p>
-                            <p>{{ direccion.calle2 }}</p>
+                            <p>{{ direccion.calle1 }},{{ direccion.calle2 }}</p>
                         </div>
                         <div>
                             <p>{{ direccion.ciudad }}, {{ direccion.pais }}</p>

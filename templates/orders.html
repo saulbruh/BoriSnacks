@@ -1,20 +1,31 @@
 {% extends 'user.html' %}
 {% block content %}
-<h1>Mis Órdenes</h1>
 
 {% if ordenes %}
-  <ul>
+<div class="orders-section">
+  <h3>Mis Órdenes</h3>
+  <ul class="orders-list">
     {% for orden in ordenes %}
       <li>
-        <strong>Orden #{{ orden.id }}</strong><br>
-        Fecha: {{ orden.fecha }}<br>
-        Método de pago: {{ orden.metodo_pago }}<br>
-        Total: ${{ orden.total }}<br>
-        Enviado a: {{ orden.direccion }}
+        <div class="order-item">
+          <strong>Orden #{{ orden.id }}</strong>
+          <div class="order-item-details">
+            <div>
+              <p>Total: ${{ orden.total }}</p>
+              <p>Enviado a: {{ orden.direccion }}</p>
+            </div>
+            <div>
+              <p>Fecha: {{ orden.fecha }}</p>
+              <p>Método de pago: {{ orden.metodo_pago }}</p>
+            </div>
+          </div>
+        </div>
+        
       </li>
       <hr>
     {% endfor %}
   </ul>
+</div>
 {% else %}
   <p>No tienes órdenes registradas aún.</p>
 {% endif %}

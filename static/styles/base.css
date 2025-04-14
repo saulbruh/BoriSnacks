@@ -360,21 +360,12 @@ body {
 .user-home-section {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: auto auto auto;
+  grid-template-rows: auto auto;
   gap: 8px;
   color: #333;
 }
 
-.user-section-banner {
-  grid-column: span 2 / span 2;
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #e9e9e9;
-  padding-bottom: 115px;
-}
-
 .user-info-container {
-  grid-row-start: 2;
   border-right: 1px solid #e9e9e9;
 }
 
@@ -394,7 +385,7 @@ body {
 }
 
 .user-info-container-items-left p {
-  font-size: 20px;
+  font-size: 17px;
   background-color: #dedddd77;
   padding: 10px;
   border-radius: 10px;
@@ -407,7 +398,7 @@ body {
 }
 
 .user-info-container-items-right p {
-  font-size: 20px;
+  font-size: 17px;
   background-color: #dedddd77;
   padding: 10px;
   border-radius: 10px;
@@ -415,9 +406,9 @@ body {
 
 
 
-.recent-orders-container {
-  grid-row-start: 2;
-}
+/* .recent-orders-container {
+
+} */
 
 .recent-orders-list-container {
   display: flex;
@@ -568,6 +559,42 @@ body {
 .btn-delete-address:hover {
   background-color: #c71f2e;
 }
+
+/* Orders section */
+
+.orders-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #333;
+  align-items: center;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+}
+
+.order-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #dedddd77;
+  padding: 35px;
+  border-radius: 10px;
+}
+
+.order-item-details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+}
+
+/* settings section */
+
 
 /* About Us */
 .about {
