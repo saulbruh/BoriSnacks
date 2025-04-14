@@ -12,7 +12,10 @@
                 <h1>Shopping Cart</h1>
             </div>
             {% if carrito_vacio %}
-                <p id="cart-empty-message" style="display: none;">Shopping cart is empty.</p>
+                <div class="cart-empty">
+                    <p class="cart-empty-message">Your shopping cart is empty.</p>
+                    <a href="{{ url_for('index') }}" class="btn-go-to-products">Go to products</a>
+                </div>
             {% else %}
                 <div class="cart-items">
                     {% for producto in productos %}
@@ -42,9 +45,12 @@
                         </div>
                     {% endfor %}
                 </div>
+                <div class="cart-title">
+                    <h2>Total: $<span id="total-pago">0.00</span></h2>
+                </div>
                 <div class="purchase-btns">
                     <form action="{{ url_for('crear_orden') }}" method="GET" style="display: inline;">
-                        <button class="purchase purchase-buy"><p>Check Out</p></button>
+                        <button class="purchase purchase-buy"><p>Check Out:</p></button>
                     </form>
                     <button class="purchase purchase-remove" id="btn-remove-all"><p>Remove All</p></button>
                 </div>

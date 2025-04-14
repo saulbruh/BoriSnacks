@@ -147,6 +147,34 @@ def login():
 
     return render_template('login.html')
 
+@app.route('/register_address', methods=['GET', 'POST'])
+def register_address():
+    if 'user_id' not in session:
+        flash("You must be logged in to add an address.", "warning")
+        session['next'] = request.path
+        return redirect(url_for('login'))
+
+    countries = list(countries_for_language('en'))
+
+    if request.method == 'POST':
+        calle1 = request.form['calle1']
+        calle2 = request.form.get('calle2', '')
+        ciudad = request.form['ciudad']
+        pais = request.form['pais']
+        codigo_postal = request.form['codigo_postal']
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO direcciones (user_id, calle1, calle2, ciudad, pais, codigo_postal) VALUES (?, ?, ?, ?, ?, ?)",
+                       (session['user_id'], calle1, calle2, ciudad, pais, codigo_postal))
+        conn.commit()
+        conn.close()
+
+        flash("Dirección guardada exitosamente.", "success")
+        return redirect(url_for('home'))
+
+    return render_template('register_address.html', countries=countries)
+
 @app.route('/logout')
 def logout():
     session.clear() # Limpia toda la sesión
@@ -490,13 +518,71 @@ def usuario():
         return redirect(url_for('login'))
 
 # Ruta para la página de inicio
-@app.route('/profile/home')
+@app.route('/profile/home', methods=['GET', 'POST'])
 def home():
     if 'user_id' not in session:
         session['next'] = request.path  
         return redirect(url_for('login'))
-    else:
-        return render_template('home.html')
+ 
+    conn = get_db_connection()
+    cursor = conn.cursor()
+ 
+    if request.method == 'POST':
+        if 'direccion_id' in request.form:
+            # Eliminar dirección
+            direccion_id = request.form['direccion_id']
+            cursor.execute("DELETE FROM direcciones WHERE id = ? AND user_id = ?", (direccion_id, session['user_id']))
+            conn.commit()
+            flash("Dirección eliminada con éxito.", "success")
+        else:
+            # Agregar nueva dirección
+            calle1 = request.form['calle1']
+            calle2 = request.form['calle2']
+            ciudad = request.form['ciudad']
+            pais = request.form['pais']
+            codigo_postal = request.form['codigo_postal']
+            cursor.execute("INSERT INTO direcciones (user_id, calle1, calle2, ciudad, pais, codigo_postal) VALUES (?, ?, ?, ?, ?, ?)", 
+                           (session['user_id'], calle1, calle2, ciudad, pais, codigo_postal))
+            conn.commit()
+            flash("Dirección guardada con éxito.", "success")
+        conn.close()
+        return redirect(url_for('home'))
+
+ 
+    cursor.execute("SELECT id, user_id, calle1, calle2, ciudad, pais, codigo_postal FROM direcciones WHERE user_id = ?", (session['user_id'],))
+    direcciones_db = cursor.fetchall()
+    direcciones = [
+        {
+            "id": d[0],
+            "user_id": d[1],
+            "calle1": d[2],
+            "calle2": d[3],
+            "ciudad": d[4],
+            "pais": d[5],
+            "codigo_postal": d[6]
+        } for d in direcciones_db
+    ]
+    cursor.execute("""
+        SELECT o.id, o.fecha_orden, o.total,
+               d.calle1, d.ciudad, d.pais
+        FROM ordenes o
+        JOIN direcciones d ON o.direccion_id = d.id
+        WHERE o.user_id = ?
+        ORDER BY o.fecha_orden DESC
+        LIMIT 2
+    """, (session['user_id'],))
+    ordenes_db = cursor.fetchall()
+    ordenes_recientes = [
+        {
+            "id": o[0],
+            "fecha": o[1],
+            "total": o[2],
+            "direccion": f"{o[3]}, {o[4]}, {o[5]}"
+        } for o in ordenes_db
+    ]
+    conn.close()
+    countries = list(countries_for_language('en'))
+    return render_template('home.html', direcciones=direcciones, countries=countries, ordenes_recientes=ordenes_recientes)
 
 # Ruta para la página de órdenes
 @app.route('/profile/orders')
@@ -532,77 +618,6 @@ def orders():
     conn.close()
     return render_template('orders.html', ordenes=ordenes)
 
-@app.route('/profile/address', methods=['GET', 'POST'])
-def address():
-    if 'user_id' not in session:
-        session['next'] = request.path  
-        return redirect(url_for('login'))
-    
-    # Obtener lista de países en inglés
-    countries = list(countries_for_language('en'))  
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, user_id, calle1, calle2, ciudad, pais, codigo_postal FROM direcciones WHERE user_id = ?", (session['user_id'],))
-    direcciones_db = cursor.fetchall()
-    direcciones = [
-    {
-        "id": d[0],
-        "user_id": d[1],
-        "calle1": d[2],
-        "calle2": d[3],
-        "ciudad": d[4],
-        "pais": d[5],
-        "codigo_postal": d[6]
-    } for d in direcciones_db
-]
-    conn.close()
-
-    if request.method == 'POST':
-        selected_country = request.form.get('country')
-        flash(f"País seleccionado: {selected_country}", "success")  # Solo muestra un mensaje, no lo guarda aún.
-
-    if request.method == 'POST':
-        calle1 = request.form['calle1']
-        calle2 = request.form['calle2']
-        ciudad = request.form['ciudad']
-        pais = request.form['pais']
-        codigo_postal = request.form['codigo_postal']
-
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
-        try:
-            cursor.execute("INSERT INTO direcciones (user_id, calle1, calle2, ciudad, pais, codigo_postal) VALUES (?, ?, ?, ?, ?, ?)", 
-                            (session['user_id'], calle1, calle2, ciudad, pais, codigo_postal))
-            conn.commit()
-        except mariadb.IntegrityError:
-            return "Error: Invalide Address."
-        finally:
-            conn.close()
-        return redirect(url_for('address'))
-    return render_template('address.html', countries=countries, direcciones=direcciones)
-
-@app.route('/delete_address', methods=['POST'])
-def delete_address():
-    if 'user_id' not in session:
-        flash("Debes iniciar sesión para eliminar una dirección.", "warning")
-        return redirect(url_for('login'))
-
-    direccion_id = request.form.get('direccion_id')
-
-    if not direccion_id:
-        flash("ID de dirección no proporcionado.", "danger")
-        return redirect(url_for('address'))
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM direcciones WHERE id = ? AND user_id = ?", (direccion_id, session['user_id']))
-    conn.commit()
-    conn.close()
-
-    flash("Dirección eliminada con éxito.", "success")
-    return redirect(url_for('address'))
 
 # Ruta para la página de ajustes
 @app.route('/profile/settings')

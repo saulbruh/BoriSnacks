@@ -65,8 +65,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-
-
 document.addEventListener("DOMContentLoaded", function() {
     const cartForms = document.querySelectorAll("form[action$='agregar_al_carrito']");
     const cartPopup = document.getElementById("cart-popup");
@@ -148,6 +146,20 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    function calcularTotal() {
+        const items = document.querySelectorAll(".cart-item");
+        let total = 0;
+        items.forEach(item => {
+            const precio = parseFloat(item.querySelector("h3").textContent.replace("$", ""));
+            const cantidad = parseInt(item.querySelector(".cantidad").textContent);
+            total += precio * cantidad;
+        });
+        const totalEl = document.getElementById("total-pago");
+        if (totalEl) {
+            totalEl.textContent = total.toFixed(2);
+        }
+    }
+
     function modificarCantidad(productoId, accion, cantidadElem) {
         fetch("/modificar_cantidad", {
             method: "POST",
@@ -170,6 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 } else {
                     location.reload();
                 }
+                calcularTotal();
             } else {
                 alert("Error: " + (data.error || "No se pudo actualizar la cantidad."));
             }
@@ -193,8 +206,8 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
+    calcularTotal();
 });
-
 
 function toggleFormulario() {
     const formulario = document.getElementById("formulario-direccion");
@@ -203,7 +216,7 @@ function toggleFormulario() {
     }
 }
 
- //Añadir dirección teniendo una ya establecida.
+//Añadir dirección teniendo una ya establecida.
 document.addEventListener("DOMContentLoaded", function () {
     const nuevaDireccionRadio = document.querySelector('input[name="direccion_id"][value=""]');
     const direccionRadios = document.querySelectorAll('input[name="direccion_id"]');

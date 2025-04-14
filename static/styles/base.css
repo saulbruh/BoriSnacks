@@ -220,6 +220,35 @@ html, body {
   margin-left: auto;
 }
 
+.cart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.cart-empty-message {
+  font-size: 20px;
+  color: #333;
+}
+
+.btn-go-to-products {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+}
+
+.btn-go-to-products:hover {
+  background-color: #218838;
+}
+
 .product_img {
   width: 200px; /* Ajusta el tamaño según prefieras */
   height: auto;
@@ -338,20 +367,22 @@ body {
 .user-section-banner {
   grid-column: span 2 / span 2;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid #e9e9e9;
 }
 
 .div2 {
   grid-row-start: 2;
+  border-right: 1px solid #e9e9e9;
 }
 
-.div3 {
+.recent-orders-container {
   grid-row-start: 2;
 }
 
-.div4 {
+.address-home-container {
   grid-column: span 2 / span 2;
+  border-top: 1px solid #e9e9e9;
 }
 
 .address {
@@ -367,6 +398,10 @@ body {
 
 .address-box {
   display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  gap: 20px;
+  padding-bottom: 10px;
 }
 
 .address-container {
@@ -375,6 +410,23 @@ body {
   gap: 20px;
 }
 
+.address-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: large;
+  
+}
+
+.address-form-container a {
+  color: #333;
+  text-decoration: none;
+  padding: 15px;
+  margin-left: 15px;
+  border-radius: 10px;
+  background-color: #dedddd77;
+}
 
 
 .address-container-item {
@@ -384,11 +436,11 @@ body {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   margin-top: auto;
   font-size: larger;
   gap: 25px;
+  position: relative;
+  width: 250px;
 }
 
 .left-address {
@@ -398,54 +450,33 @@ body {
   margin-bottom: auto;
 }
 
-.address-form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: large;
-}
-
-#formulario-direccion {
-  padding-top: 50px;
-
-  align-items: center;
-  justify-content: center;
-}
-
-.address-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
 /* Delete button styles */
+
+
+.delete-address-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
 .btn-delete-address {
   background-color: #e52737;
   color: white;
   border: none;
-  padding: 10px 15px;
-  border-radius: 8px;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
+  width: 25px;
+  height: 25px;
+  border-radius: 15px;
   cursor: pointer;
   transition: background-color 0.3s;
-}
-
-.delete-address-container {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 14px;
 }
 
 .btn-delete-address:hover {
   background-color: #c71f2e;
 }
-
-
 
 /* About Us */
 .about {

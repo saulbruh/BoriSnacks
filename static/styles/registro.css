@@ -32,8 +32,16 @@ h1 {
 }
 
 .section form {
-    width: 100%;
-    max-width: 400px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.address-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .create-form {
@@ -60,6 +68,19 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="p
     color: #a9a9a9;
 }
 
+.styled-select {
+    padding: 15px;
+    font-size: 16px;
+    width: 90%; /* Modificado para evitar que los selects sean más anchos que el formulario */
+    margin-bottom: 10px;
+    background-color: #e7e5e5; /* Fondo más oscuro */
+    color: black; /* Texto legible */
+    border-radius: 12px;
+    border: none;
+    text-align: center; /* Agregado para centrar el texto dentro de los selects */
+    box-sizing: border-box; /* Agregado para evitar que el padding afecte el ancho total */
+}
+
 button {
     background-color: #4CAF50; /* Color de fondo atractivo */
     color: white; /* Color de texto que contrasta */
@@ -73,4 +94,11 @@ button {
 
 button:hover {
     background-color: #45a049; /* Color de fondo al pasar el mouse */
+}
+
+#formulario-direccion {
+  padding-top: 50px;
+
+  align-items: center;
+  justify-content: center;
 }

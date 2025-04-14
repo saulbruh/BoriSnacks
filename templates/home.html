@@ -12,8 +12,89 @@
         </div>
     </div>
     <div class="div2">2</div>
-    <div class="div3">3</div>
-    <div class="div4">4</div>
+    <div class="recent-orders-container">
+        <h3>Recent Orders</h3>
+        {% if ordenes_recientes %}
+        <ul class="recent-orders-list">
+            {% for orden in ordenes_recientes %}
+            <li>
+                <strong>Order #{{ orden.id }}</strong><br>
+                Date: {{ orden.fecha }}<br>
+                Total: ${{ orden.total }}<br>
+                Sent to: {{ orden.direccion }}
+            </li>
+            <hr>
+            {% endfor %}
+        </ul>
+        <div style="text-align: right; margin-top: 1em;">
+            <a href="{{ url_for('orders') }}" class="btn-see-all">See all</a>
+        </div>
+        {% else %}
+        <p>You don't have any recent orders.</p>
+        {% endif %}
+    </div>
+    <div class="address-home-container">
+        <h3>Your Addresses</h3>
+        <div class="address-box">
+            <div class="left-address">
+                {% if direcciones %}
+                <div class="address-container">
+                    {% for direccion in direcciones %}
+                    <div class="address-container-item">
+                        <div class="delete-address-container">
+                            <form action="{{ url_for('home') }}" method="POST">
+                                <input type="hidden" name="direccion_id" value="{{ direccion.id }}">
+                                <button class="btn-delete-address" type="submit"><i data-feather="x"></i></button>
+                            </form>
+                        </div>
+                        <div>
+                            <p>{{ direccion.calle1 }},</p>
+                            <p>{{ direccion.calle2 }}</p>
+                        </div>
+                        <div>
+                            <p>{{ direccion.ciudad }}, {{ direccion.pais }}</p>
+                            <p>{{ direccion.codigo_postal }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div>
+                    <p>You don't have any saved addresses.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="address-form-container">
+                <a href="{{ url_for('register_address') }}"><i data-feather="plus"></i></a>
+                <div id="formulario-direccion" style="display: none;">
+                    <form class="address-form" action="{{ url_for('home') }}" method="POST">
+                        <label for="calle1">Address:</label>
+                        <input placeholder="Street address" type="text" id="calle1" name="calle1" required class="input-text">
+
+                        <label for="calle2">Apartment, suite, etc:</label>
+                        <input placeholder="Apartment, suite, etc" type="text" id="calle2" name="calle2" class="input-text">
+
+                        <label for="ciudad">City:</label>
+                        <input placeholder="City" type="text" id="ciudad" name="ciudad" required class="input-text">
+
+                        <label for="pais">Country:</label>
+                        <select placeholder="Country" name="pais" id="pais" required class="input-text">
+                            <option value="" disabled selected> Select a country </option>
+                            {% for code, country in countries %}
+                                <option value="{{ code }}">{{ country }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <label for="codigo_postal">ZIP/postal code:</label>
+                        <input placeholder="ZIP/postal code" type="text" id="codigo_postal" name="codigo_postal" required class="input-text">
+
+                        <button type="submit">Save Address</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
     
 {% endblock %}
