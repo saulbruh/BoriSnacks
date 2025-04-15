@@ -433,16 +433,29 @@ def procesar_orden():
             return redirect(url_for('crear_orden'))
 
         cursor.execute("""
-            INSERT INTO direcciones (user_id, calle1, calle2, ciudad, pais, codigo_postal)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO direcciones_ordenes (calle1, calle2, ciudad, pais, codigo_postal)
+            VALUES (?, ?, ?, ?, ?)
         """, (
-            user_id,
             calle1,
             request.form.get('calle2'),
             ciudad,
             pais,
             codigo_postal
         ))
+        conn.commit()
+        direccion_id = cursor.lastrowid
+    else:
+        # Copiar dirección existente del usuario a direcciones_ordenes
+        cursor.execute("SELECT calle1, calle2, ciudad, pais, codigo_postal FROM direcciones WHERE id = ? AND user_id = ?", (direccion_id, user_id))
+        direccion = cursor.fetchone()
+        if not direccion:
+            flash("Dirección no encontrada o no válida.", "danger")
+            return redirect(url_for('crear_orden'))
+
+        cursor.execute("""
+            INSERT INTO direcciones_ordenes (calle1, calle2, ciudad, pais, codigo_postal)
+            VALUES (?, ?, ?, ?, ?)
+        """, direccion)
         conn.commit()
         direccion_id = cursor.lastrowid
 
@@ -568,7 +581,7 @@ def home():
         SELECT o.id, o.fecha_orden, o.total,
                d.calle1, d.ciudad, d.pais
         FROM ordenes o
-        JOIN direcciones d ON o.direccion_id = d.id
+        JOIN direcciones_ordenes d ON o.direccion_id = d.id
         WHERE o.user_id = ?
         ORDER BY o.fecha_orden DESC
         LIMIT 2
@@ -603,7 +616,7 @@ def orders():
           SELECT o.id, o.fecha_orden, o.metodo_pago, o.total, 
                  d.calle1, d.ciudad, d.pais
           FROM ordenes o
-          JOIN direcciones d ON o.direccion_id = d.id
+          JOIN direcciones_ordenes d ON o.direccion_id = d.id
           WHERE o.user_id = ?
           ORDER BY o.fecha_orden DESC
       """, (user_id,))
