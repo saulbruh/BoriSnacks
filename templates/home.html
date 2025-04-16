@@ -35,7 +35,9 @@
             </div>
         </div>
         {% else %}
-        <p>You don't have any recent orders.</p>
+        <div class="no-orders-container">
+            <p>You don't have any recent orders.</p>
+        </div>
         {% endif %}
     </div>
     <div class="address-home-container">
@@ -63,7 +65,7 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                <div>
+                <div class="no-addresses-container">
                     <p>You don't have any saved addresses.</p>
                 </div>
                 {% endif %}
