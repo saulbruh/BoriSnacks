@@ -1,6 +1,5 @@
 {% extends 'user.html' %}
 
-
 {% block content %}
 <div class="user-home-section">
     <div class="user-info-container">
@@ -22,12 +21,14 @@
         <div class="recent-orders-list-container">
             <ul class="recent-orders-list">
                 {% for orden in ordenes_recientes %}
-                <li class="recent-orders-list-item">
-                    <p><strong>Order #{{ orden.id }}</strong></p>
-                    <p>Date: {{ orden.fecha }}</p>
-                    <p>Total: ${{ orden.total }}</p>
-                    <p>Sent to: {{ orden.direccion }}</p>
-                </li>
+                
+                  <li class="recent-orders-list-item">
+                      <p><strong>Order #{{ orden.id }}</strong></p>
+                      <p>Date: {{ orden.fecha }}</p>
+                      <p>Total: ${{ orden.total }}</p>
+                      <p>Sent to: {{ orden.direccion }}</p>
+                      <a href="{{ url_for('orden_detalle', orden_id=orden.id) }}" class="recent-orders-list-item-link">See details</a>
+                  </li>
                 {% endfor %}
             </ul>
             <div class="recent-orders-list-container-btn">
@@ -76,6 +77,16 @@
                     <i data-feather="plus"></i>
                 </a>
             </div>
+        </div>
+    </div>
+    <div class="user-settings-container">
+        <div class="account-actions-row">
+            <form action="{{ url_for('logout') }}" method="GET">
+                <button class="btn-logout" type="submit">Logout</button>
+            </form>
+            <form action="{{ url_for('delete_account') }}" method="GET">
+                <button class="btn-delete-account" type="submit">Delete Account</button>
+            </form>
         </div>
     </div>
 </div>

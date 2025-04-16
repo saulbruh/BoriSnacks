@@ -636,20 +636,69 @@ def orders():
     return render_template('orders.html', ordenes=ordenes)
 
 
-# Ruta para la página de ajustes
-@app.route('/profile/settings')
-def settings():
+@app.route('/orden/<int:orden_id>')
+def orden_detalle(orden_id):
     if 'user_id' not in session:
-        session['next'] = request.path  
+        flash("You must be logged in to view an order.", "warning")
         return redirect(url_for('login'))
-    else:
-        return render_template('settings.html')
 
-@app.route('/delete_account', methods=['POST'])
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Obtener datos de la orden (asegurándonos que pertenezca al usuario)
+    cursor.execute("""
+        SELECT o.id, o.fecha_orden, o.total, o.metodo_pago,
+               d.calle1, d.calle2, d.ciudad, d.pais, d.codigo_postal
+        FROM ordenes o
+        JOIN direcciones_ordenes d ON o.direccion_id = d.id
+        WHERE o.id = ? AND o.user_id = ?
+    """, (orden_id, session['user_id']))
+    orden = cursor.fetchone()
+
+    if not orden:
+        flash("Order not found.", "danger")
+        conn.close()
+        return redirect(url_for('orders'))
+
+    # Obtener items de la orden
+    cursor.execute("""
+        SELECT p.nombre, p.imagen, oi.cantidad, oi.precio_unitario
+        FROM orden_items oi
+        JOIN productos p ON oi.product_id = p.id
+        WHERE oi.orden_id = ?
+    """, (orden_id,))
+    items = cursor.fetchall()
+    conn.close()
+
+    orden_info = {
+        "id": orden[0],
+        "fecha": orden[1],
+        "total": orden[2],
+        "metodo_pago": orden[3],
+        "direccion": f"{orden[4]} {orden[5]}, {orden[6]}, {orden[7]}, {orden[8]}"
+    }
+
+    productos = [
+        {
+            "nombre": item[0],
+            "imagen": item[1],
+            "cantidad": item[2],
+            "precio_unitario": item[3],
+            "subtotal": item[2] * item[3]
+        } for item in items
+    ]
+
+    return render_template('order_page.html', orden=orden_info, productos=productos)
+
+
+@app.route('/delete_account', methods=['GET', 'POST'])
 def delete_account():
     if 'user_id' not in session:
         flash("You need to log in before performing this action.", "warning")
         return redirect(url_for('login'))
+
+    if request.method == 'GET':
+        return render_template('delete_account.html')
 
     contraseña = request.form['contraseña']
 
@@ -669,7 +718,7 @@ def delete_account():
     else:
         conn.close()
         flash("Wrong password. Account not deleted", "danger")
-        return redirect(url_for('usuario'))
+        return redirect(url_for('delete_account'))
 
 @app.route('/reset_password_request', methods=['POST'])
 def reset_password_request():

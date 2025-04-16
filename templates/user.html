@@ -6,14 +6,6 @@
 
 {% block body %}
 <div class="container user-container">
-    <aside class="sidebar">
-        <h2>Menu</h2>
-        <ul class="sidebar-menu">
-            <a href="{{ url_for('home') }}"><li>Profile</li></a>
-            <a href="{{ url_for('orders') }}"><li>Orders</li></a>
-            <a href="{{ url_for('settings') }}"><li>Settings</li></a>
-        </ul>
-    </aside>
     <main class="main-content-user">
         {% block content %}
         {% endblock %}

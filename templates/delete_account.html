@@ -1,0 +1,16 @@
+{% extends 'user.html' %}
+{% block content %}
+<div class="delete-account-confirm">
+    <h2>Confirm Account Deletion</h2>
+    <div class="delete-account-confirm-text">
+        <p>Please confirm you want to delete your account.</p>
+    </div>
+    <form method="POST" action="{{ url_for('delete_account') }}" class="delete-account-confirm-form">
+        <input type="password" name="contraseña" placeholder="Enter your password" required>
+        <button type="submit" class="btn-delete-confirm">Delete My Account</button>
+    </form>
+    <div class="delete-account-confirm-cancel">
+        <a href="{{ url_for('home') }}" class="btn-cancel">Cancel</a>
+    </div>
+</div>
+{% endblock %}

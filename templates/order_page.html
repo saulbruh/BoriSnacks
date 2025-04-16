@@ -1,0 +1,29 @@
+{% extends 'user.html' %}
+{% block content %}
+
+<div class="order-detail">
+  
+
+  <h3>Items</h3>
+  <div class="order-items">
+    {% for item in productos %}
+      <div class="order-item-card">
+        <img src="{{ url_for('static', filename=item.imagen) }}" alt="{{ item.nombre }}" class="product-image">
+        <div>
+          <p><strong>{{ item.nombre }}</strong></p>
+          <p>Quantity: {{ item.cantidad }}</p>
+          <p>Price per item: ${{ item.precio_unitario }}</p>
+          <p>Subtotal: ${{ item.subtotal }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <h2>Order #{{ orden.id }}</h2>
+  <p><strong>Date:</strong> {{ orden.fecha }}</p>
+  <p><strong>Payment Method:</strong> {{ orden.metodo_pago }}</p>
+  <p><strong>Address:</strong> {{ orden.direccion }}</p>
+  <p><strong>Total:</strong> ${{ orden.total }}</p>
+</div>
+
+{% endblock %}
