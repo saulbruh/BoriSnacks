@@ -385,8 +385,10 @@ body {
   flex-direction: column;
   gap: 10px;
   background-color: #dedddd77;
-  padding: 10px;
+  padding: 20px;
   border-radius: 10px;
+  position: relative;
+  min-height: 150px; /* optional: ensures enough space for absolute link */
 }
 
 .recent-orders-list-container-btn {
@@ -418,6 +420,24 @@ body {
   justify-content: center;
   align-items: center;
   padding-top: 50px;
+}
+
+.recent-orders-list-item-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.recent-orders-list-item-link {
+  color: #333;
+  position: absolute;
+  bottom: 15px;
+  left: 135px;
+}
+.recent-orders-list-item-link:hover {
+  color: #6f6f6f;
 }
 
 .address-home-container {
@@ -677,12 +697,66 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 100px;
+  gap: 50px;
 }
 
 /* order page */
 
+.order-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
 
+.order-items-container {
+  display: flex;
+  gap: 100px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.order-item-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #dedddd77;
+  padding: 25px;
+  border-radius: 10px;
+}
+
+.product-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+}
+
+.order-item-details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.order-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-info-price-quantity {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
 /*  */
 
@@ -805,6 +879,10 @@ body {
   color: #333;
 }
 
+.cart-details h2 {
+  font-size: 20px;
+}
+
 .cart-item-left-element {
   display: flex;
   align-items: center;
@@ -895,6 +973,184 @@ body {
 .purchase-remove:hover {
   background-color: #c71f2e;
 }
+
+/* Pagina de hacer el pedido */
+
+.order-confirm-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #333;
+}
+
+.order-confirm-container h2 {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.order-page-container {
+  display: flex;
+  gap: 50px;
+  width: 100%;
+  justify-content: center;
+  font-size: 17px;
+}
+
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 25%;
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #dedddd77;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.product-item img {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+}
+
+.product-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.product-item-details-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.shipping-address-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.payment-method-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+.payment-method-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.payment-method-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-form-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-form-item input {
+  font-size: 17px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #dedddd77;
+  border: none;
+}
+
+.pay-button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pay-button-container p {
+  font-size: 20px;
+}
+
+.pay-button-container button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 20px;
+  width: 100%;
+}
+
+.pay-button-container button:hover {
+  background-color: #218838;
+  color: white;
+}
+
+.pay-button-container-no-addresses {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pay-button-container-no-addresses p {
+  font-size: 20px;
+}
+
+.pay-button-container-no-addresses button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 20px;
+}
+
+.pay-button-container-no-addresses button:hover {
+  background-color: #218838;
+  color: white;
+}
+
+.pay-button-container-no-addresses a {
+  text-decoration: none;
+  color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*  */
 

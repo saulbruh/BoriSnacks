@@ -26,8 +26,9 @@
                       <p><strong>Order #{{ orden.id }}</strong></p>
                       <p>Date: {{ orden.fecha }}</p>
                       <p>Total: ${{ orden.total }}</p>
-                      <p>Sent to: {{ orden.direccion }}</p>
-                      <a href="{{ url_for('orden_detalle', orden_id=orden.id) }}" class="recent-orders-list-item-link">See details</a>
+                      <div class="recent-orders-list-item-details">
+                        <a href="{{ url_for('orden_detalle', orden_id=orden.id) }}" class="recent-orders-list-item-link">See details</a>
+                      </div>
                   </li>
                 {% endfor %}
             </ul>

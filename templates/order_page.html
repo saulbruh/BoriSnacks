@@ -2,28 +2,38 @@
 {% block content %}
 
 <div class="order-detail">
-  
-
-  <h3>Items</h3>
-  <div class="order-items">
-    {% for item in productos %}
-      <div class="order-item-card">
-        <img src="{{ url_for('static', filename=item.imagen) }}" alt="{{ item.nombre }}" class="product-image">
-        <div>
-          <p><strong>{{ item.nombre }}</strong></p>
-          <p>Quantity: {{ item.cantidad }}</p>
-          <p>Price per item: ${{ item.precio_unitario }}</p>
-          <p>Subtotal: ${{ item.subtotal }}</p>
+  <h3>Order Details</h3>
+  <div class="order-items-container">
+    <div class="order-items">
+      <h3>Items</h3>
+      {% for item in productos %}
+        <div class="order-item-card">
+          <a href="{{ url_for('producto', id=item.id) }}">
+            <img src="{{ url_for('static', filename=item.imagen) }}" alt="{{ item.nombre }}" class="product-image">
+          </a>
+          <div class="order-item-details">
+            <div class="item-info-price-quantity">
+              <p><strong>{{ item.nombre }}</strong></p>
+              <p>Quantity: {{ item.cantidad }}</p>
+            </div>
+            <div class="item-info-price-quantity">
+              <p>Per item: ${{ item.precio_unitario }}</p>
+              <p>Subtotal: ${{ item.subtotal }}</p>
+            </div>
+          </div>
         </div>
-      </div>
-    {% endfor %}
-  </div>
+      {% endfor %}
+    </div>
 
-  <h2>Order #{{ orden.id }}</h2>
-  <p><strong>Date:</strong> {{ orden.fecha }}</p>
-  <p><strong>Payment Method:</strong> {{ orden.metodo_pago }}</p>
-  <p><strong>Address:</strong> {{ orden.direccion }}</p>
-  <p><strong>Total:</strong> ${{ orden.total }}</p>
+    <div class="order-details">
+      <h2>Order #{{ orden.id }}</h2>
+      <p><strong>Date:</strong> {{ orden.fecha }}</p>
+      <p><strong>Payment Method:</strong> {{ orden.metodo_pago }}</p>
+      <p><strong>Address:</strong> {{ orden.direccion }}</p>
+      <p><strong>Total:</strong> ${{ orden.total }}</p>
+      <p><strong>Status:</strong> On the way</p>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

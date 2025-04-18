@@ -407,7 +407,8 @@ def crear_orden():
       ]
     conn.close()
     countries = list(countries_for_language('en'))
-    return render_template('crear_orden.html', productos=productos, total=total, direcciones=direcciones, countries=countries)
+    from datetime import datetime
+    return render_template('crear_orden.html', productos=productos, total=total, direcciones=direcciones, countries=countries, now=datetime.now)
 
 @app.route('/procesar_orden', methods=['POST'])
 def procesar_orden():
@@ -459,12 +460,27 @@ def procesar_orden():
         conn.commit()
         direccion_id = cursor.lastrowid
 
-    # Validar campos de pago
-    campos_pago = ['nombre_tarjeta', 'numero_tarjeta', 'expiracion', 'cvc']
-    for campo in campos_pago:
-        if not request.form.get(campo):
-            flash("Todos los campos del método de pago son requeridos.", "danger")
-            return redirect(url_for('crear_orden'))
+    # Validar campos de pago solo si se selecciona Card
+    metodo_pago = request.form.get('metodo_pago')
+    if not metodo_pago:
+        flash("Please select a payment method.", "danger")
+        return redirect(url_for('crear_orden'))
+
+    if metodo_pago == 'Card':
+        campos_pago = ['nombre_tarjeta', 'numero_tarjeta', 'expiracion', 'cvc']
+        for campo in campos_pago:
+            if not request.form.get(campo):
+                flash("All card fields are required.", "danger")
+                return redirect(url_for('crear_orden'))
+            if campo == 'numero_tarjeta' and not request.form.get(campo).isdigit():
+                flash("Card number must be numeric.", "danger")
+                return redirect(url_for('crear_orden'))
+            if campo == 'numero_tarjeta' and len(request.form.get(campo)) != 16:
+                flash("Card number must be 16 digits.", "danger")
+                return redirect(url_for('crear_orden'))
+            if campo == 'cvc' and (not request.form.get(campo).isdigit() or len(request.form.get(campo)) != 3):
+                flash("CVC must be 3 numeric digits.", "danger")
+                return redirect(url_for('crear_orden'))
 
     # Obtener carrito
     cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
@@ -486,7 +502,7 @@ def procesar_orden():
         return redirect(url_for('carrito'))
 
     # Crear orden
-    metodo_pago = "Tarjeta"  # En el futuro puedes extraerlo del formulario si quieres múltiples métodos
+    # metodo_pago ya se extrajo arriba
     
     # Calcular el total sumando los subtotales de los productos
     total = 0
@@ -662,7 +678,7 @@ def orden_detalle(orden_id):
 
     # Obtener items de la orden
     cursor.execute("""
-        SELECT p.nombre, p.imagen, oi.cantidad, oi.precio_unitario
+        SELECT p.id, p.nombre, p.imagen, oi.cantidad, oi.precio_unitario
         FROM orden_items oi
         JOIN productos p ON oi.product_id = p.id
         WHERE oi.orden_id = ?
@@ -680,11 +696,12 @@ def orden_detalle(orden_id):
 
     productos = [
         {
-            "nombre": item[0],
-            "imagen": item[1],
-            "cantidad": item[2],
-            "precio_unitario": item[3],
-            "subtotal": item[2] * item[3]
+            "id": item[0],
+            "nombre": item[1],
+            "imagen": item[2],
+            "cantidad": item[3],
+            "precio_unitario": item[4],
+            "subtotal": item[3] * item[4]
         } for item in items
     ]
 

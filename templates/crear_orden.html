@@ -1,90 +1,111 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>BoriSnacks - Confirmar Orden</title>
+<title>BoriSnacks - Confirm Order</title>
 {% endblock %}
 
 {% block body %}
-<div class="padding-main-content">
-  <div class="container">
-    <h1>Confirmar Orden</h1>
-
-    <!-- Lista de productos -->
-    <h2>Productos en tu carrito</h2>
-    <ul>
+<div class="padding-main-content order-confirm-container">
+  <h2>Confirm Order</h2>
+  <div class="order-page-container">
+    <!-- Product List -->
+    <div class="product-list">
+      <h3>Products in your cart</h3>
       {% for producto in productos %}
-        <li>
-          {{ producto.nombre }} ({{ producto.cantidad }} x ${{ producto.precio }}) = ${{ producto.subtotal }}
-        </li>
+        <div class="product-item" style="display: flex; align-items: center; margin-bottom: 10px;">
+          <img src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" width="80" height="80" style="margin-right: 10px;">
+          <div class="product-item-details">
+            <strong>{{ producto.nombre }}</strong>
+            <div class="product-item-details-info">
+              <p>Quantity: {{ producto.cantidad }}</p>
+              Price: ${{ producto.precio }}
+            </div>
+          </div>
+        </div>
       {% endfor %}
-    </ul>
-    <p><strong>Total a pagar:</strong> ${{ total }}</p>
+    </div>
 
-    <!-- Dirección de envío -->
-    <h2>Dirección de Envío</h2>
     {% if direcciones %}
-  <form method="POST" action="{{ url_for('procesar_orden') }}" id="orden-form">
-    {% for direccion in direcciones %}
-      <div>
-        <input type="radio" name="direccion_id" value="{{ direccion.id }}" required onclick="toggleNuevaDireccion(false)">
-        {{ direccion.calle1 }}, {{ direccion.ciudad }}, {{ direccion.pais }} {{ direccion.codigo_postal }}
+    <div class="info-container">
+      <div class="shipping-address-form">
+        <h3>Shipping Address</h3>
+        <div>
+          <form method="POST" action="{{ url_for('procesar_orden') }}" id="orden-form">
+            {% for direccion in direcciones %}
+            <div>
+              <input type="radio" name="direccion_id" value="{{ direccion.id }}" required>
+              {{ direccion.calle1 }}, {{ direccion.ciudad }}, {{ direccion.pais }} {{ direccion.codigo_postal }}
+            </div>
+            {% endfor %}
+        </div>
       </div>
-    {% endfor %}
-    <div>
-      <input type="radio" name="direccion_id" value="" onclick="toggleNuevaDireccion(true)">
-      <strong>Añadir nueva dirección</strong>
-    </div>
-    <div id="form-nueva-direccion" style="display: none; margin-top: 10px;">
-      <label>Calle 1:</label>
-      <input type="text" name="calle1"><br>
 
-      <label>Calle 2:</label>
-      <input type="text" name="calle2"><br>
+        <!-- Payment Method -->
+      <div class="payment-method-container">
+        <h3>Payment Method</h3>
+        <div class="payment-method-options">
+          <div class="payment-method-option">
+            <input type="radio" id="applepay" name="metodo_pago" value="Apple Pay" onclick="toggleCardForm(false)" required>
+            <label for="applepay">Apple Pay</label>
+          </div>
 
-      <label>Ciudad:</label>
-      <input type="text" name="ciudad"><br>
+          <div class="payment-method-option">
+            <input type="radio" id="paypal" name="metodo_pago" value="PayPal" onclick="toggleCardForm(false)">
+            <label for="paypal">PayPal</label>
+          </div>
 
-      <label>País:</label>
-      <select name="pais">
-        <option value="" disabled selected>Selecciona un país</option>
-        {% for code, country in countries %}
-          <option value="{{ code }}">{{ country }}</option>
-        {% endfor %}
-      </select><br>
+          <div class="payment-method-option">
+            <input type="radio" id="card" name="metodo_pago" value="Card" onclick="toggleCardForm(true)">
+            <label for="card">Credit/Debit Card</label>
+          </div>
+        </div>
 
-      <label>Código Postal:</label>
-      <input type="text" name="codigo_postal"><br>
-    </div>
-  {% else %}
-    <p>No tienes direcciones guardadas. Agrega una:</p>
-    <form method="POST" action="{{ url_for('procesar_orden') }}" id="orden-form">
-      <div id="form-nueva-direccion">
-        <label>Calle 1:</label><input type="text" name="calle1" required><br>
-        <label>Calle 2:</label><input type="text" name="calle2"><br>
-        <label>Ciudad:</label><input type="text" name="ciudad" required><br>
-        <label>País:</label>
-        <select name="pais" required>
-          <option value="" disabled selected>Selecciona un país</option>
-          {% for code, country in countries %}
-            <option value="{{ code }}">{{ country }}</option>
-          {% endfor %}
-        </select><br>
-        <label>Código Postal:</label><input type="text" name="codigo_postal" required><br>
+        <!-- Card Form -->
+        <div class="card-form-container">
+          <div id="card-form" style="display: none; margin-top: 20px;">
+            <div class="card-form-item">
+              <label>Name on the card:</label>
+              <input type="text" name="nombre_tarjeta"><br>
+            </div>
+
+            <div class="card-form-item">
+              <label>Card number:</label>
+              <input type="text" name="numero_tarjeta" pattern="\d{16}" title="Must be 16 digits"><br>
+            </div>
+
+            <div class="card-form-item">
+              <label>Expiration date:</label>
+              <input type="month" name="expiracion" min="{{ now().strftime('%Y-%m') }}"><br>
+            </div>
+
+            <div class="card-form-item">
+              <label>CVC:</label>
+              <input type="text" name="cvc" pattern="\d{3}" title="Must be 3 digits"><br>
+            </div>
+          </div>
+        </div>
       </div>
-  {% endif %}
 
-    <!-- Formulario de pago -->
-    <h2>Método de Pago</h2>
-    <div>
-      <label>Nombre en la tarjeta:</label><input type="text" name="nombre_tarjeta" required><br>
-      <label>Número de tarjeta:</label><input type="text" name="numero_tarjeta" required><br>
-      <label>Fecha de expiración:</label><input type="text" name="expiracion" placeholder="MM/AA" required><br>
-      <label>CVC:</label><input type="text" name="cvc" required><br>
+      <div class="pay-button-container">
+        <p><strong>Total to pay:</strong> ${{ total }}</p>
+        <button type="submit">Pay</button>
+        {% else %}
+          <div class="pay-button-container-no-addresses">
+            <p>You don't have any saved addresses.</p>
+            <a href="{{ url_for('home') }}">
+              <button type="button">Add Address</button>
+            </a>
+          </div>
+        {% endif %}
+      </div>
+      </div>
     </div>
-
-    <!-- Botón de pagar -->
-    <button type="submit">Pay</button>
-    </form>
   </div>
 </div>
+
+<script>
+  function toggleCardForm(show) {
+    document.getElementById('card-form').style.display = show ? 'block' : 'none';
+  }
+</script>
 {% endblock %}
