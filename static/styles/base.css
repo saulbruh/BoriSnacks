@@ -1238,6 +1238,7 @@ body {
 .img-product {
   width: 50%;
   /* margin-left: auto; */
+  border-radius: 10px;
 }
 
 .product-page-btns {
