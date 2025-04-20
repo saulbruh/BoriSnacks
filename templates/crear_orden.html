@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block body %}
+
 <div class="padding-main-content order-confirm-container">
   <h2>Confirm Order</h2>
   <div class="order-page-container">
@@ -89,6 +90,9 @@
       <div class="pay-button-container">
         <p><strong>Total to pay:</strong> ${{ total }}</p>
         <button type="submit">Pay</button>
+        <div class="cancel-button-container">
+          <a href="{{ url_for('carrito') }}" class="btn-cancel">Cancel</a>
+        </div>
         {% else %}
           <div class="pay-button-container-no-addresses">
             <p>You don't have any saved addresses.</p>

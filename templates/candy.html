@@ -20,16 +20,15 @@
                         <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Imagen no disponible" class="product_img" style="max-width: 300px; height: auto; border-radius: 10px;">
                     {% endif %}
                     <div>
-                        <p>{{ producto.nombre }}</p>
-                        <p>${{ producto.precio }}</p>
+                        <div class="item-card-info">
+                            <p>{{ producto.nombre }}</p>
+                            ${{ producto.precio }}
+                        </div>
                         <div class="product-buttons">
                             <div>
-                                <button class="btn-buy">Buy</button>
-                            </div>
-                            <div class="buttons-carro">
                                 <form action="{{ url_for('agregar_al_carrito') }}" method="POST">
                                     <input type="hidden" name="producto_id" value="{{ producto.id }}">
-                                    <button type="submit" class="btn-cart"><i data-feather="shopping-cart"></i></button>
+                                    <button type="submit" class="btn-cart">Add<i data-feather="shopping-cart"></i></button>
                                 </form>
                             </div>
                         </div>

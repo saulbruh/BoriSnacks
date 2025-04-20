@@ -209,15 +209,21 @@ html, body {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.item-card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-card-info p {
+  font-size: 20px;
+}
+
 .product-buttons {
   margin-top: 10px;
   display: flex;
+  align-items: center;
+  justify-content: right;
   gap: 10px;
-  margin-left: auto;
-}
-
-.buttons-carro {
-  margin-left: auto;
 }
 
 .cart-empty {
@@ -250,20 +256,9 @@ html, body {
 }
 
 .product_img {
-  width: 200px; /* Ajusta el tamaño según prefieras */
+  width: 250px; /* Ajusta el tamaño según prefieras */
   height: auto;
   border-radius: 8px;
-}
-
-.btn-buy {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 8px;
-  font-size: 21px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
 .btn-buy:hover {
@@ -271,10 +266,15 @@ html, body {
 }
 
 .btn-cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
   background-color: #ffc107;
   color: black;
   border: none;
-  padding: 10px 20px 7px 20px;
+  padding: 12px 20px 12px 20px;
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
@@ -713,7 +713,7 @@ body {
 
 .order-items-container {
   display: flex;
-  gap: 100px;
+  gap: 50px;
   padding: 10px;
   border-radius: 10px;
 }
@@ -750,6 +750,8 @@ body {
 .order-details {
   display: flex;
   flex-direction: column;
+  border-left: 1px solid #e9e9e9;
+  padding-left: 50px;
 }
 
 .item-info-price-quantity {
@@ -990,7 +992,7 @@ body {
 
 .order-page-container {
   display: flex;
-  gap: 50px;
+  gap: 25px;
   width: 100%;
   justify-content: center;
   font-size: 17px;
@@ -1001,6 +1003,8 @@ body {
   flex-direction: column;
   gap: 10px;
   width: 25%;
+  border-right: 1px solid #e9e9e9;
+  padding-right: 25px;
 }
 
 .product-item {
@@ -1106,6 +1110,13 @@ body {
   color: white;
 }
 
+.cancel-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  padding-top: 10px;
+}
+
 .pay-button-container-no-addresses {
   display: flex;
   flex-direction: column;
@@ -1136,21 +1147,6 @@ body {
   text-decoration: none;
   color: white;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*  */
 

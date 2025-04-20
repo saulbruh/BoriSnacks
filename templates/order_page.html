@@ -32,6 +32,9 @@
       <p><strong>Address:</strong> {{ orden.direccion }}</p>
       <p><strong>Total:</strong> ${{ orden.total }}</p>
       <p><strong>Status:</strong> On the way</p>
+      <div class="cancel-button-container">
+        <a href="{{ url_for('home') }}" class="btn-cancel">Back</a>
+      </div>
     </div>
   </div>
 </div>
