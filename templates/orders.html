@@ -18,13 +18,12 @@
               <p>Date: {{ orden.fecha }}</p>
               <p>Payment method: {{ orden.metodo_pago }}</p>
             </div>
-            <div>
+            <div class="order-details-btn">
               <a href="{{ url_for('orden_detalle', orden_id=orden.id) }}" class="order-link">See details</a>
             </div>
           </div>
         </div>
       </li>
-      <hr>
     {% endfor %}
   </ul>
   {% else %}

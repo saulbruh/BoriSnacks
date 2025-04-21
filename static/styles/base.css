@@ -680,7 +680,7 @@ body {
 .orders-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 25px;
   list-style: none;
 }
 
@@ -698,6 +698,15 @@ body {
   align-items: center;
   justify-content: center;
   gap: 50px;
+}
+
+.order-details-btn {
+  display: flex;
+  margin-left: auto;
+}
+
+.order-link {
+  color: #333;
 }
 
 /* order page */
