@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
 import mariadb  # type: ignore
 import hashlib
+import calendar
 from dotenv import load_dotenv
 from country_list import countries_for_language
 import os
@@ -616,7 +617,8 @@ def home():
     cursor.execute("SELECT COUNT(*) FROM ordenes WHERE user_id = ?", (session['user_id'],))
     total_ordenes = cursor.fetchone()[0]
     cursor.execute("SELECT fecha_registro FROM usuarios WHERE id = ?", (session['user_id'],))
-    fecha_registro = cursor.fetchone()[0]
+    raw_fecha = cursor.fetchone()[0]
+    fecha_registro = f"{calendar.month_name[raw_fecha.month]} {raw_fecha.year}"
     conn.close()
     countries = list(countries_for_language('en'))
     return render_template('home.html', direcciones=direcciones, countries=countries, ordenes_recientes=ordenes_recientes, total_ordenes=total_ordenes, session=session, fecha_registro=fecha_registro)
