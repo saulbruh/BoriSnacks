@@ -98,3 +98,9 @@ button:hover {
   align-items: center;
   justify-content: center;
 }
+
+.flashes {
+  margin-top: 20px;
+  color: orange;
+  font-size: 16px;
+}

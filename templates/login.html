@@ -22,13 +22,13 @@
       </form>
       {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        <div>
+        <div class="flashes">
           {% for category, message in messages %}
-            <p class="{{ category }}">{{ message }}</p>
+            <div class="alert {{ category }}">{{ message }}</div>
           {% endfor %}
         </div>
       {% endif %}
-    {% endwith %}
+      {% endwith %}
     </div>
 
     <p>Don't have an account? <a href="/registro">Create one!</a></p>

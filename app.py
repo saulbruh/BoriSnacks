@@ -92,7 +92,8 @@ def registro():
                            (nombre, apellido, correo_electronico, hashed_password, fecha_registro))
             conn.commit()
         except mariadb.IntegrityError:
-            return "Error: Email already registered."
+            flash("Email already registered.", "danger")
+            return redirect(url_for('registro'))
         finally:
             conn.close()
 
@@ -146,9 +147,9 @@ def login():
                 next_page = session.pop('next', url_for('index'))  # Obtener la página almacenada o redirigir a index
                 return redirect(next_page)
             else:
-                flash("Error: Wrong password", "danger")
+                flash("Wrong password", "danger")
         else:
-            flash("Error: User not found", "danger")
+            flash("User not found", "danger")
 
     return render_template('login.html')
 
