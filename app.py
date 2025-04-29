@@ -14,7 +14,7 @@ import os
 load_dotenv()  # Cargar variables de entorno desde .env
 
 app = Flask(__name__)
-app.secret_key = "1234"
+app.secret_key = os.getenv('SECRET_KEY')
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
