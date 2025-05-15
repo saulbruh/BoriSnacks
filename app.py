@@ -1,3 +1,8 @@
+"""
+BoriSnacks - E-commerce application for snacks and drinks
+Main application file containing all routes and business logic
+"""
+
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session, flash  # type: ignore
 from flask_sqlalchemy import SQLAlchemy  # type: ignore
 from flask_mail import Mail, Message
@@ -11,11 +16,14 @@ from dotenv import load_dotenv
 from country_list import countries_for_language
 import os
 
-load_dotenv()  # Cargar variables de entorno desde .env
+# Load environment variables
+load_dotenv()
 
+# Initialize Flask app and configure settings
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
+# Configure email settings
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -25,10 +33,40 @@ app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 mail = Mail(app)
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
+# Helper function to check if user is logged in
 def check_logged_in():
     if 'user_id' in session:
         return redirect(url_for('usuario'))
     return None
+
+# Database connection helper
+def get_db_connection():
+    """Create and return a database connection using environment variables"""
+    return mariadb.connect(
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        host=os.getenv("DB_HOST"),
+        port=int(os.getenv("DB_PORT")),
+        database=os.getenv("DB_NAME")
+    )
+
+# Cart management helper
+def get_or_create_cart(user_id):
+    """Get existing cart or create new one for user"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
+    carrito = cursor.fetchone()
+
+    if not carrito:
+        cursor.execute("INSERT INTO carro_de_compra (user_id) VALUES (?)", (user_id,))
+        conn.commit()
+        cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
+        carrito = cursor.fetchone()
+
+    conn.close()
+    return carrito[0]
 
 @app.route('/')
 def index():
@@ -126,7 +164,6 @@ def login():
                 session['user_email'] = usuario_email
                 session['user_lastname'] = usuario_apellido
                 flash("Successfuly logged in", "success")
-                # Si el usuario intentó agregar un producto al carrito antes de iniciar sesión
                 if session.get('post_login_add_to_cart'):
                     producto_id = session.pop('post_login_add_to_cart')
                     carrito_id = get_or_create_cart(usuario_id)
@@ -144,7 +181,7 @@ def login():
 
                     conn.commit()
                     conn.close()
-                next_page = session.pop('next', url_for('index'))  # Obtener la página almacenada o redirigir a index
+                next_page = session.pop('next', url_for('index'))
                 return redirect(next_page)
             else:
                 flash("Wrong password", "danger")
@@ -183,9 +220,9 @@ def register_address():
 
 @app.route('/logout')
 def logout():
-    session.clear() # Limpia toda la sesión
-    flash("Successfully logged out", "info")  # Mensaje de confirmación
-    return redirect(url_for('index'))  # Redirigir a la página de inicio
+    session.clear()
+    flash("Successfully logged out", "info")
+    return redirect(url_for('index'))
 
 @app.route('/about')
 def about():
@@ -201,7 +238,6 @@ def carrito():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Obtener el ID del carrito del usuario
     cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (session['user_id'],))
     carrito = cursor.fetchone()
 
@@ -211,7 +247,6 @@ def carrito():
 
     carrito_id = carrito[0]
 
-    # Obtener productos en el carrito
     cursor.execute("""
         SELECT p.id, p.nombre, p.precio, p.imagen, ci.cantidad 
         FROM carro_de_compra_items ci
@@ -237,7 +272,7 @@ def modificar_cantidad():
         return jsonify(success=False, error="No autorizado")
 
     producto_id = request.form.get('producto_id')
-    accion = request.form.get('accion')  # puede ser "sumar" o "restar"
+    accion = request.form.get('accion')
 
     if not producto_id or accion not in ['sumar', 'restar']:
         return jsonify(success=False, error="Parámetros inválidos")
@@ -321,7 +356,6 @@ def eliminar_del_carrito():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Obtener el ID del carrito del usuario
     cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
     carrito = cursor.fetchone()
 
@@ -331,7 +365,6 @@ def eliminar_del_carrito():
 
     carrito_id = carrito[0]
 
-    # Eliminar el producto del carrito
     cursor.execute("DELETE FROM carro_de_compra_items WHERE carro_de_compra_id = ? AND product_item_id = ?", (carrito_id, producto_id))
     conn.commit()
     conn.close()
@@ -371,7 +404,6 @@ def crear_orden():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Obtener ID del carrito
     cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (session['user_id'],))
     carrito = cursor.fetchone()
     if not carrito:
@@ -381,7 +413,6 @@ def crear_orden():
 
     carrito_id = carrito[0]
 
-    # Obtener productos del carrito
     cursor.execute("""
           SELECT p.id, p.nombre, p.precio, p.imagen, ci.cantidad 
           FROM carro_de_compra_items ci
@@ -396,7 +427,6 @@ def crear_orden():
       ]
     total = sum(p["subtotal"] for p in productos)
 
-    # Obtener direcciones del usuario
     cursor.execute("SELECT id, calle1, calle2, ciudad, pais, codigo_postal FROM direcciones WHERE user_id = ?", (session['user_id'],))
     direcciones_db = cursor.fetchall()
     direcciones = [
@@ -424,10 +454,8 @@ def procesar_orden():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Validar dirección
     direccion_id = request.form.get('direccion_id')
     if not direccion_id:
-        # Intentar crear una nueva dirección
         calle1 = request.form.get('calle1')
         ciudad = request.form.get('ciudad')
         pais = request.form.get('pais')
@@ -450,7 +478,6 @@ def procesar_orden():
         conn.commit()
         direccion_id = cursor.lastrowid
     else:
-        # Copiar dirección existente del usuario a direcciones_ordenes
         cursor.execute("SELECT calle1, calle2, ciudad, pais, codigo_postal FROM direcciones WHERE id = ? AND user_id = ?", (direccion_id, user_id))
         direccion = cursor.fetchone()
         if not direccion:
@@ -464,7 +491,6 @@ def procesar_orden():
         conn.commit()
         direccion_id = cursor.lastrowid
 
-    # Validar campos de pago solo si se selecciona Card
     metodo_pago = request.form.get('metodo_pago')
     if not metodo_pago:
         flash("Please select a payment method.", "danger")
@@ -486,7 +512,6 @@ def procesar_orden():
                 flash("CVC must be 3 numeric digits.", "danger")
                 return redirect(url_for('crear_orden'))
 
-    # Obtener carrito
     cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
     carrito = cursor.fetchone()
     if not carrito:
@@ -505,10 +530,6 @@ def procesar_orden():
         flash("Tu carrito está vacío.", "danger")
         return redirect(url_for('carrito'))
 
-    # Crear orden
-    # metodo_pago ya se extrajo arriba
-    
-    # Calcular el total sumando los subtotales de los productos
     total = 0
     for item in items:
         producto_id, cantidad = item
@@ -532,10 +553,8 @@ def procesar_orden():
             VALUES (?, ?, ?, ?)
         """, (orden_id, producto_id, cantidad, precio))
 
-        # Restar del stock
         cursor.execute("UPDATE productos SET stock = stock - ? WHERE id = ?", (cantidad, producto_id))
 
-    # Vaciar carrito
     cursor.execute("DELETE FROM carro_de_compra_items WHERE carro_de_compra_id = ?", (carrito_id,))
     conn.commit()
     conn.close()
@@ -548,11 +567,10 @@ def usuario():
     if 'user_name' in session:
         return render_template('home.html', usuario=session['user_name'])
     else:
-        session['next'] = request.path  # Guardar la URL actual antes de redirigir
+        session['next'] = request.path
         flash("Log in requiered in order to proceed.", "warning")
         return redirect(url_for('login'))
 
-# Ruta para la página de inicio
 @app.route('/profile/home', methods=['GET', 'POST'])
 def home():
     if 'user_id' not in session:
@@ -564,13 +582,11 @@ def home():
  
     if request.method == 'POST':
         if 'direccion_id' in request.form:
-            # Eliminar dirección
             direccion_id = request.form['direccion_id']
             cursor.execute("DELETE FROM direcciones WHERE id = ? AND user_id = ?", (direccion_id, session['user_id']))
             conn.commit()
             flash("Dirección eliminada con éxito.", "success")
         else:
-            # Agregar nueva dirección
             calle1 = request.form['calle1']
             calle2 = request.form['calle2']
             ciudad = request.form['ciudad']
@@ -624,7 +640,6 @@ def home():
     countries = list(countries_for_language('en'))
     return render_template('home.html', direcciones=direcciones, countries=countries, ordenes_recientes=ordenes_recientes, total_ordenes=total_ordenes, session=session, fecha_registro=fecha_registro)
 
-# Ruta para la página de órdenes
 @app.route('/profile/orders')
 def orders():
     if 'user_id' not in session:
@@ -658,7 +673,6 @@ def orders():
     conn.close()
     return render_template('orders.html', ordenes=ordenes)
 
-
 @app.route('/orden/<int:orden_id>')
 def orden_detalle(orden_id):
     if 'user_id' not in session:
@@ -668,7 +682,6 @@ def orden_detalle(orden_id):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Obtener datos de la orden (asegurándonos que pertenezca al usuario)
     cursor.execute("""
         SELECT o.id, o.fecha_orden, o.total, o.metodo_pago,
                d.calle1, d.calle2, d.ciudad, d.pais, d.codigo_postal
@@ -683,7 +696,6 @@ def orden_detalle(orden_id):
         conn.close()
         return redirect(url_for('orders'))
 
-    # Obtener items de la orden
     cursor.execute("""
         SELECT p.id, p.nombre, p.imagen, oi.cantidad, oi.precio_unitario
         FROM orden_items oi
@@ -777,7 +789,7 @@ def reset_password_request():
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     try:
-        email = serializer.loads(token, salt="reset-password", max_age=3600)  # Expira en 1 hora
+        email = serializer.loads(token, salt="reset-password", max_age=3600)
     except:
         flash("Expired or invalid token", "danger")
         return redirect(url_for('login'))
@@ -797,33 +809,6 @@ def reset_password(token):
         return redirect(url_for('login'))
 
     return render_template('reset_password.html', token=token)
-
-# Conexion a MariaDB usando variables de entorno
-def get_db_connection():
-    return mariadb.connect(
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        host=os.getenv("DB_HOST"),
-        port=int(os.getenv("DB_PORT")),
-        database=os.getenv("DB_NAME")
-    )
-
-#Se crea el carro de compra y se le asigna a un usuario.
-def get_or_create_cart(user_id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
-    carrito = cursor.fetchone()
-
-    if not carrito:
-        cursor.execute("INSERT INTO carro_de_compra (user_id) VALUES (?)", (user_id,))
-        conn.commit()
-        cursor.execute("SELECT id FROM carro_de_compra WHERE user_id = ?", (user_id,))
-        carrito = cursor.fetchone()
-
-    conn.close()
-    return carrito[0]
 
 @app.route('/snacks')
 def snacks():
@@ -884,6 +869,19 @@ def all_products():
     ]
 
     return render_template('all_products.html', productos=productos_json)
+
+"""
+Main Routes:
+- /: Home page showing all products
+- /producto/<id>: Individual product page
+- /registro: User registration
+- /login: User login
+- /logout: User logout
+- /carrito: Shopping cart management
+- /profile: User profile
+- /orders: Order history
+- /snacks, /drinks, /candy: Category-specific product pages
+"""
 
 if __name__ == "__main__":
     app.run(debug=True)

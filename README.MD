@@ -65,31 +65,79 @@ Para modificar o extender la funcionalidad del carrito, revisa el archivo `app.p
 **Ruta:** `/`  
 **Descripción:** Muestra la lista de productos disponibles.  
 
+### 📍 Detalle de Producto
+**Ruta:** `/producto/<int:id>`  
+**Descripción:** Muestra los detalles de un producto específico y productos relacionados.
+
 ### 📍 Registro de Usuarios
 **Ruta:** `/registro`  
-**Método:** `POST`  
+**Método:** `GET, POST`  
 **Descripción:** Permite a nuevos usuarios registrarse en la plataforma.
 
 ### 📍 Inicio de Sesión
 **Ruta:** `/login`  
-**Método:** `POST`  
+**Método:** `GET, POST`  
 **Descripción:** Inicia sesión y almacena los datos en la sesión del usuario.
+
+### 📍 Gestión de Direcciones
+**Ruta:** `/register_address`  
+**Método:** `GET, POST`  
+**Descripción:** Permite a los usuarios registrar y gestionar sus direcciones de envío.
 
 ### 📍 Cierre de Sesión
 **Ruta:** `/logout`  
 **Descripción:** Cierra la sesión del usuario y lo redirige a la página de inicio.  
 
-### 📍 Perfil del Usuario
-**Ruta:** `/perfil`  
-**Descripción:** Muestra la información del usuario autenticado.
+### 📍 Acerca de
+**Ruta:** `/about`  
+**Descripción:** Muestra información sobre la plataforma.
 
 ### 📍 Carrito de Compras
 **Ruta:** `/carrito`  
 **Descripción:** Permite a los usuarios ver y gestionar su carrito de compras.
 
-### 📍 Eliminar Cuenta
-**Ruta:** `/delete_account`  
+### 📍 Gestión del Carrito
+**Ruta:** `/modificar_cantidad`  
 **Método:** `POST`  
+**Descripción:** Modifica la cantidad de un producto en el carrito.
+
+**Ruta:** `/agregar_al_carrito`  
+**Método:** `POST`  
+**Descripción:** Agrega un producto al carrito de compras.
+
+**Ruta:** `/eliminar_del_carrito`  
+**Método:** `POST`  
+**Descripción:** Elimina un producto del carrito de compras.
+
+**Ruta:** `/vaciar_carrito`  
+**Método:** `POST`  
+**Descripción:** Vacía completamente el carrito de compras.
+
+### 📍 Gestión de Órdenes
+**Ruta:** `/crear_orden`  
+**Método:** `GET`  
+**Descripción:** Muestra el formulario para crear una nueva orden con los productos del carrito.
+
+**Ruta:** `/procesar_orden`  
+**Método:** `POST`  
+**Descripción:** Procesa la orden del usuario y actualiza el inventario.
+
+### 📍 Perfil y Gestión de Usuario
+**Ruta:** `/profile`  
+**Descripción:** Muestra la información del usuario autenticado.
+
+**Ruta:** `/profile/home`  
+**Método:** `GET, POST`  
+**Descripción:** Página principal del perfil del usuario.
+
+**Ruta:** `/profile/orders`  
+**Descripción:** Muestra el historial de órdenes del usuario.
+
+**Ruta:** `/orden/<int:orden_id>`  
+**Descripción:** Muestra los detalles de una orden específica.
+
+**Ruta:** `/delete_account`  
+**Método:** `GET, POST`  
 **Descripción:** Permite a los usuarios eliminar su cuenta de la plataforma previa confirmación de contraseña.  
 
 ### 📍 Recuperación de Contraseña
@@ -100,6 +148,19 @@ Para modificar o extender la funcionalidad del carrito, revisa el archivo `app.p
 **Ruta:** `/reset_password/<token>`  
 **Método:** `GET, POST`  
 **Descripción:** Permite a los usuarios restablecer su contraseña utilizando un token enviado por correo electrónico.  
+
+### 📍 Categorías de Productos
+**Ruta:** `/snacks`  
+**Descripción:** Muestra los productos de la categoría snacks.
+
+**Ruta:** `/drinks`  
+**Descripción:** Muestra los productos de la categoría bebidas.
+
+**Ruta:** `/candy`  
+**Descripción:** Muestra los productos de la categoría dulces.
+
+**Ruta:** `/all_products`  
+**Descripción:** Muestra todos los productos disponibles.
 
 ## Seguridad Implementada
 
