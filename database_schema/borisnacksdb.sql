@@ -13,6 +13,9 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
 
+CREATE DATABASE IF NOT EXISTS borisnacks;
+USE borisnacks;
+
 -- Tabla: carro_de_compra
 DROP TABLE IF EXISTS `carro_de_compra`;
 CREATE TABLE `carro_de_compra` (
@@ -179,7 +182,6 @@ CREATE TABLE `usuarios` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `correo_electronico` (`correo_electronico`)
 ) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 -- (Sin datos insertados en esta tabla)
 
