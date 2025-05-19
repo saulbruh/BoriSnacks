@@ -16,7 +16,10 @@ Dastas. Los integrantes del grupo BoriSnacks son:
 ---
 
 ###  PDF
-[Ver más a detalle información sobre el proyecto](docs/)
+[Ver más a detalle información sobre el proyecto](docs/borisnacksInfo.pdf)
+
+### Ver video
+[Ver más a detalle información sobre el proyecto](https://youtu.be/JyQ1JRU56aM)
 
 ## Características
 - Registro e inicio de sesión seguro.
